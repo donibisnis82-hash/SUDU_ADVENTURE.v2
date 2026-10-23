@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catatan Pengluaran</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+    <h1>Dompetku</h1>
+    <P>Catatan Keuangan</P>
+    </header>
+    <main>
+      <section class="saldo">
+        <p>Sisa Uang</p>
+        <h2 id="sisaUang">Rp0</h2>
+
+        <label for="saldoAwal">Saldo awal(Rp)</label>
+        <div class="baris">
+          <input 
+            type="number"
+            id="saldoAwal"
+            placeholder="Mauskkan saldo awal"
+            min="0"
+            >
+          <button id="simpanSaldo">Simpan</button>
+        </div>
+      </section>
+
+      <section class="ringkasan">
+        <div class="kartu">
+          <p>Total pengeluaran</p>
+          <h3 id="totalPengelaran">Rp0</h3>
+        </div>
+        <div class="kartu">
+          <p>Jumlah Transaksi</p>
+          <h3 id="jumlahTransaksi">0</h3>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tambah Pengeluaran</h2>
+
+        <form id="formPengeluaran">
+          <label for="nama">Nama pengeluaran</label>
+          <input 
+            type="text"
+            id="nama"
+            placeholder="contoh: Makan siang"
+            required
+            >
+          
+          <label for="jumlah"> Jumlah Uang(Rp)</label>
+          <input
+            type="text"
+            id="jumlah"
+            placeholder="Contoh: 50.00"
+            inputmode="numeric"
+            autocomplete="off"
+            required
+            >
+
+          <label for="tanggal">Tanggal</label>
+          <input type="data" id="tanggal"
+            required>
+
+          <label for="kategori">Kategori</label> 
+          <select id="kategori">
+            <option>Makanan</option>
+            <option>Transportasi</option>
+            <option>Belanja</option>
+            <option>Kesehatn</option>
+            <option>Hiburan</option>
+            <option>lainnya</option>
+          </select>
+
+          <button type="submit"
+            class="tombol-tambah">
+                  + simpan Pengluaran
+            </button>                     
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Riwayat Pengluaran</h2>
+        <div id="riwayat" class="riwayat"</div>
+      </section>
+        
+<!-- Anggaran bulanan -->
+<section class="panel">
+  <h2>🎯 Anggaran Bulanan</h2>
+  <label for="anggaran">Batas pengeluaran per bulan (Rp)</label>
+  <div class="baris">
+    <input
+      type="text"
+      id="anggaran"
+      inputmode="numeric"
+      placeholder="Contoh: 1.000.000"
+    >
+    <button id="simpanAnggaran">Simpan</button>
+  </div>
+
+  <p id="infoAnggaran">Atur anggaran bulananmu.</p>
+  <div class="progress">
+    <div id="progressAnggaran"></div>
+  </div>
+</section>
+
+<!-- Cari transaksi -->
+<section class="panel">
+  <h2>🔎 Cari Transaksi</h2>
+  <input
+    type="search"
+    id="cariTransaksi"
+    placeholder="Cari nama pengeluaran..."
+  >
+
+  <label for="filterKategori">Filter kategori</label>
+  <select id="filterKategori">
+    <option value="">Semua kategori</option>
+    <option>Makanan</option>
+    <option>Transportasi</option>
+    <option>Belanja</option>
+    <option>Tagihan</option>
+    <option>Kesehatan</option>
+    <option>Hiburan</option>
+    <option>Lainnya</option>
+  </select>
+
+  <button id="eksporCSV" class="tombol-tambah">
+    📥 Unduh Laporan CSV
+  </button>
+</section>
+        
+<!-- Grafik Pengeluaran -->
+<section class="panel" id="bagianGrafik">
+  <h2>📊 Analisis Pengeluaran</h2>
+  <p class="teks-bantuan">
+    Pantau pola pengeluaranmu agar keuangan tetap terkontrol.
+  </p>
+
+  <div class="pilihan-grafik">
+    <button type="button" id="grafikHarian" class="aktif">
+      7 Hari Terakhir
+    </button>
+    <button type="button" id="grafikBulanan">
+      6 Bulan Terakhir
+    </button>
+  </div>
+
+  <div class="wadah-grafik">
+    <canvas id="grafikPengeluaran"
+      role="img"
+      aria-label="Grafik pengeluaran uang">
+    </canvas>
+  </div>
+
+  <p id="ringkasanGrafik" class="teks-bantuan">
+    Grafik pengeluaran akan ditampilkan di sini.
+  </p>
+</section>
+
+
+    </main>
+
+    <footer>
+      <p>DompetKu . Kelola uang dengan bijak</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
