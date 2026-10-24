@@ -1,12 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Catatan Pengluaran</title>
+    <title>DompetKu - Catatan Keuangan</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+      
+<!-- LOADING SCREEN DOMPETKU -->
+<div id="loadingScreen" aria-label="Memuat DompetKu">
+  <div class="loading-content">
+    <div class="loading-logo">D</div>
+
+    <h1>Dompet<span>Ku</span></h1>
+    <p>Kelola uang, wujudkan impian.</p>
+
+    <div class="loading-spinner"></div>
+
+    <div class="loading-progress">
+      <div id="loadingBar"></div>
+    </div>
+
+    <small id="loadingText">Menyiapkan keuanganmu...</small>
+  </div>
+</div>
+
       
 <nav class="navigasi-dompet">
   <a href="#beranda" class="nav-item aktif" data-halaman="beranda">
@@ -37,7 +56,7 @@
           <input 
             type="number"
             id="saldoAwal"
-            placeholder="Mauskkan saldo awal"
+            placeholder="Masukkan saldo awal"
             min="0"
             >
           <button id="simpanSaldo">Simpan</button>
@@ -47,11 +66,46 @@
       <section class="ringkasan">
         <div class="kartu">
           <p>Total pengeluaran</p>
-          <h3 id="totalPengelaran">Rp0</h3>
+          <h3 id="totalPengeluaran">Rp0</h3>
         </div>
         <div class="kartu">
           <p>Jumlah Transaksi</p>
           <h3 id="jumlahTransaksi">0</h3>
+        </div>
+      </section>
+
+
+      <!-- DASHBOARD PINTAR: FITUR PERTAMA -->
+      <section class="panel dashboard-pintar" id="dashboardPintar">
+        <div class="dashboard-heading">
+          <div>
+            <p class="label-kecil">RINGKASAN OTOMATIS</p>
+            <h2>✨ Dashboard Pintar</h2>
+          </div>
+          <span class="status-dashboard" id="statusKeuangan">Memeriksa...</span>
+        </div>
+        <p class="teks-bantuan">Ringkasan kondisi keuangan berdasarkan catatan yang kamu simpan.</p>
+        <div class="dashboard-grid">
+          <article class="dashboard-mini">
+            <span>Pengeluaran bulan ini</span>
+            <strong id="pintarPengeluaranBulan">Rp0</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Pemasukan bulan ini</span>
+            <strong id="pintarPemasukanBulan">Rp0</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Kategori terbesar</span>
+            <strong id="pintarKategoriTerbesar">Belum ada</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Rata-rata pengeluaran</span>
+            <strong id="pintarRataRata">Rp0</strong>
+          </article>
+        </div>
+        <div class="saran-dashboard">
+          <span aria-hidden="true">💡</span>
+          <p id="saranKeuangan">Catat pemasukan dan pengeluaran untuk mendapatkan saran.</p>
         </div>
       </section>
 
@@ -71,14 +125,14 @@
           <input
             type="text"
             id="jumlah"
-            placeholder="Contoh: 50.00"
+            placeholder="Contoh: 50.000"
             inputmode="numeric"
             autocomplete="off"
             required
             >
 
           <label for="tanggal">Tanggal</label>
-          <input type="data" id="tanggal"
+          <input type="date" id="tanggal"
             required>
 
           <label for="kategori">Kategori</label> 
@@ -100,7 +154,7 @@
 
       <section class="panel">
         <h2>Riwayat Pengluaran</h2>
-        <div id="riwayat" class="riwayat"</div>
+        <div id="riwayat" class="riwayat"></div>
       </section>
         
 <!-- Anggaran bulanan -->
