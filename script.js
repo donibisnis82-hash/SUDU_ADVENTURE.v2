@@ -1,1546 +1,907 @@
 
-"use strict";
+/* DOMPETKU - EMERALD PREMIUM */
 
-// ===================================
-// 1. FORMAT ANGKA KE RUPIAH
-// ===================================
-const formatRupiah = (angka) =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0
-  }).format(angka);
+:root {
+  --bg: #071d19;
+  --surface: #0d3029;
+  --surface2: #124438;
+  --green: #08a579;
+  --gold: #f4cf3a;
+  --white: #f3fbf7;
+  --muted: #a7c4b7;
+  --border: rgba(150, 224, 195, .2);
+  --danger: #ff7777;
+  --radius: 20px;
+}
 
-const formatAngka = (angka) =>
-  new Intl.NumberFormat("id-ID", {
-    maximumFractionDigits: 0
-  }).format(angka);
+* {
+  box-sizing: border-box;
+}
 
-// ===================================
-// 2. MEMUAT DATA LAMA
-// Data lama tidak dihapus
-// ===================================
-function bacaTransaksi() {
-  try {
-    const data = JSON.parse(
-      localStorage.getItem("dompet_transaksi") || "[]"
-    );
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at top right, #125b47 0%, transparent 45%),
+    var(--bg);
+  color: var(--white);
+  line-height: 1.6;
+}
+
+/* HEADER */
+
+header {
+  padding: 28px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #063c30, #087f5b);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0 0 26px 26px;
+  box-shadow: 0 10px 35px #0002;
+}
+
+header h1 {
+  margin: 0;
+  color: var(--gold);
+  font-size: clamp(26px, 5vw, 38px);
+  letter-spacing: -1px;
+}
+
+header p {
+  margin: 5px 0 0;
+  color: #d5eee2;
+}
+
+/* LAYOUT */
+
+main {
+  width: 100%;
+  max-width: 1000px;
+  margin: 25px auto;
+  padding: 0 18px;
+}
+
+.saldo,
+.panel,
+.kartu {
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 32px #0002;
+  animation: muncul .45s ease both;
+}
+
+.saldo {
+  padding: 25px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #124b39, #075343);
+  margin-bottom: 18px;
+}
+
+.saldo p {
+  color: #c7e5d8;
+  margin-top: 0;
+}
+
+.saldo h2 {
+  color: var(--gold);
+  font-size: clamp(28px, 5vw, 38px);
+  margin: 8px 0 20px;
+  overflow-wrap: anywhere;
+}
+
+/* RINGKASAN */
+
+.ringkasan {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  margin: 18px 0;
+}
+
+.kartu {
+  background: linear-gradient(145deg, #10392f, #0b2923);
+  border-radius: 17px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.kartu p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.kartu h3 {
+  color: var(--white);
+  font-size: clamp(17px, 3vw, 24px);
+  overflow-wrap: anywhere;
+}
+
+/* PANEL */
+
+.panel {
+  background: rgba(13, 48, 41, .92);
+  border-radius: var(--radius);
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 21px;
+  color: var(--white);
+}
+
+/* FORM */
+
+label {
+  display: block;
+  color: #d2e7dc;
+  font-size: 14px;
+  margin: 15px 0 7px;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 14px;
+  background: #092b25;
+  color: var(--white);
+  border: 1px solid #397d69;
+  border-radius: 12px;
+  font: inherit;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+input::placeholder {
+  color: #87a99b;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px #08a57926;
+}
+
+.baris {
+  display: flex;
+  gap: 10px;
+}
+
+.baris input {
+  flex: 1;
+}
+
+button {
+  padding: 12px 17px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--green);
+  color: white;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform .2s, filter .2s;
+}
+
+button:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(.98);
+}
+
+.tombol-tambah {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  color: #17291d;
+  background: linear-gradient(100deg, #f4cf3a, #ffb932);
+}
+
+/* RIWAYAT */
+
+.item-riwayat {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.item-atas {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.item-atas strong {
+  overflow-wrap: anywhere;
+}
+
+.nominal {
+  color: #ff8585;
+  font-weight: bold;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.detail {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.aksi-transaksi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tombol-edit {
+  background: #d7f4e7;
+  color: #086b4b;
+}
+
+.tombol-hapus {
+  background: #522b30;
+  color: #ffb5b5;
+  margin-top: 0;
+}
+
+.kosong {
+  text-align: center;
+  padding: 24px 8px;
+  color: var(--muted);
+}
+
+/* ANGGARAN */
+
+.progress {
+  height: 12px;
+  background: #234d40;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+#progressAnggaran {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #08a579, #58e5ac);
+  border-radius: inherit;
+  transition: width .4s ease;
+}
+
+#progressAnggaran.hampir-penuh {
+  background: #f4cf3a;
+}
+
+#progressAnggaran.lewat-batas {
+  background: #ff6262;
+}
+
+#infoAnggaran {
+  color: var(--muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* FOOTER */
+
+footer {
+  padding: 25px 15px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ANIMASI */
+
+@keyframes muncul {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-let saldoAwal = Number(
-  localStorage.getItem("dompet_saldo") || 0
-);
+/* RESPONSIVE HP */
 
-if (!Number.isSafeInteger(saldoAwal) || saldoAwal < 0) {
-  saldoAwal = 0;
-}
+@media (max-width: 480px) {
+  main {
+    padding: 0 12px;
+    margin: 16px auto;
+  }
 
-let transaksi = bacaTransaksi();
+  .saldo,
+  .panel {
+    padding: 17px;
+    border-radius: 16px;
+  }
 
-let anggaran = Number(
-  localStorage.getItem("dompet_anggaran") || 0
-);
+  .ringkasan {
+    gap: 10px;
+  }
 
-if (!Number.isSafeInteger(anggaran) || anggaran < 0) {
-  anggaran = 0;
-}
+  .kartu {
+    padding: 13px;
+  }
 
-// ===================================
-// 3. MENGAMBIL ELEMEN HTML
-// ===================================
-const form = document.getElementById("formPengeluaran");
-const inputSaldo = document.getElementById("saldoAwal");
-const inputNama = document.getElementById("nama");
-const inputJumlah = document.getElementById("jumlah");
-const inputTanggal = document.getElementById("tanggal");
-const inputKategori = document.getElementById("kategori");
+  .kartu h3 {
+    font-size: 17px;
+  }
 
-const elemenSisa = document.getElementById("sisaUang");
-const elemenTotal = document.getElementById("totalPengeluaran") || document.getElementById("totalPengelaran");
-const elemenJumlah = document.getElementById("jumlahTransaksi");
-const elemenRiwayat = document.getElementById("riwayat");
+  .baris {
+    align-items: stretch;
+  }
 
-// Fitur tambahan bersifat opsional
-const inputAnggaran = document.getElementById("anggaran");
-const tombolAnggaran = document.getElementById("simpanAnggaran");
-const infoAnggaran = document.getElementById("infoAnggaran");
-const progressAnggaran = document.getElementById("progressAnggaran");
-const inputCari = document.getElementById("cariTransaksi");
-const filterKategori = document.getElementById("filterKategori");
-const tombolEkspor = document.getElementById("eksporCSV");
+  .baris button {
+    padding: 10px 12px;
+  }
 
-// ===================================
-// 4. FORMAT NOMINAL SAAT MENGETIK
-// Contoh: 50000 menjadi 50.000
-// ===================================
-function pasangFormatNominal(input) {
-  if (!input) return;
-
-  input.addEventListener("input", () => {
-    const posisiAwal = input.selectionStart;
-    const panjangLama = input.value.length;
-
-    let angka = input.value.replace(/\D/g, "").slice(0, 15);
-
-    input.value = angka ? formatAngka(Number(angka)) : "";
-
-    // Menjaga posisi kursor sebisa mungkin
-    if (document.activeElement === input) {
-      const selisih = input.value.length - panjangLama;
-      const posisi = Math.max(
-        0,
-        Math.min(input.value.length, (posisiAwal || 0) + selisih)
-      );
-
-      input.setSelectionRange(posisi, posisi);
-    }
-  });
-}
-
-pasangFormatNominal(inputJumlah);
-pasangFormatNominal(inputSaldo);
-pasangFormatNominal(inputAnggaran);
-
-// ===================================
-// 5. TANGGAL HARI INI
-// ===================================
-function tanggalHariIni() {
-  const sekarang = new Date();
-
-  sekarang.setMinutes(
-    sekarang.getMinutes() - sekarang.getTimezoneOffset()
-  );
-
-  return sekarang.toISOString().slice(0, 10);
-}
-
-if (inputTanggal && !inputTanggal.value) {
-  inputTanggal.value = tanggalHariIni();
-}
-
-// ===================================
-// 6. MENYIMPAN DATA
-// ===================================
-function simpanData() {
-  try {
-    localStorage.setItem("dompet_saldo", String(saldoAwal));
-    localStorage.setItem(
-      "dompet_transaksi",
-      JSON.stringify(transaksi)
-    );
-    localStorage.setItem("dompet_anggaran", String(anggaran));
-    return true;
-  } catch (error) {
-    alert("Data gagal disimpan. Periksa ruang penyimpanan browser.");
-    console.error(error);
-    return false;
+  .item-atas {
+    flex-wrap: wrap;
   }
 }
 
-// ===================================
-// 7. TOTAL PENGELUARAN
-// ===================================
-function hitungTotal(daftar) {
-  return daftar.reduce(
-    (total, item) => total + Number(item.jumlah || 0),
-    0
-  );
-}
-
-function hitungTotalBulanIni() {
-  const sekarang = new Date();
-  const bulan = sekarang.getMonth();
-  const tahun = sekarang.getFullYear();
-
-  return hitungTotal(
-    transaksi.filter((item) => {
-      const tanggal = new Date(item.tanggal + "T12:00:00");
-
-      return (
-        !Number.isNaN(tanggal.getTime()) &&
-        tanggal.getMonth() === bulan &&
-        tanggal.getFullYear() === tahun
-      );
-    })
-  );
-}
-
-// ===================================
-// 8. TAMPILKAN ANGGARAN BULANAN
-// ===================================
-function tampilkanAnggaran() {
-  if (!infoAnggaran || !progressAnggaran) return;
-
-  const totalBulanIni = hitungTotalBulanIni();
-
-  const persen = anggaran > 0
-    ? (totalBulanIni / anggaran) * 100
-    : 0;
-
-  progressAnggaran.style.width =
-    Math.min(persen, 100) + "%";
-
-  progressAnggaran.classList.toggle(
-    "hampir-penuh",
-    persen >= 80 && persen < 100
-  );
-
-  progressAnggaran.classList.toggle(
-    "lewat-batas",
-    persen >= 100
-  );
-
-  if (anggaran <= 0) {
-    infoAnggaran.textContent = "Atur anggaran bulananmu.";
-    return;
-  }
-
-  infoAnggaran.textContent =
-    "Terpakai " + formatRupiah(totalBulanIni) +
-    " dari " + formatRupiah(anggaran) +
-    " (" + persen.toFixed(1) + "%)." +
-    (persen >= 100
-      ? " Anggaran terlampaui!"
-      : persen >= 80
-        ? " Hati-hati, anggaran hampir habis."
-        : " Anggaran masih tersedia.");
-}
-
-// ===================================
-// 9. TAMPILKAN RIWAYAT TRANSAKSI
-// ===================================
-function tampilkanData() {
-  const total = hitungTotal(transaksi);
-
-  if (elemenSisa) {
-    elemenSisa.textContent = formatRupiah(saldoAwal - total);
-  }
-
-  if (elemenTotal) {
-    elemenTotal.textContent = formatRupiah(total);
-  }
-
-  if (elemenJumlah) {
-    elemenJumlah.textContent = transaksi.length;
-  }
-
-  if (elemenRiwayat) {
-    elemenRiwayat.replaceChildren();
-
-    const kataKunci = inputCari
-      ? inputCari.value.toLowerCase().trim()
-      : "";
-
-    const kategoriDipilih = filterKategori
-      ? filterKategori.value
-      : "";
-
-    const daftarTampil = [...transaksi]
-      .reverse()
-      .filter((item) =>
-        String(item.nama).toLowerCase().includes(kataKunci)
-      )
-      .filter((item) =>
-        !kategoriDipilih ||
-        item.kategori === kategoriDipilih
-      );
-
-    if (daftarTampil.length === 0) {
-      const pesan = document.createElement("p");
-      pesan.className = "kosong";
-      pesan.textContent = transaksi.length === 0
-        ? "Belum ada pengeluaran."
-        : "Transaksi tidak ditemukan.";
-
-      elemenRiwayat.appendChild(pesan);
-    }
-
-    daftarTampil.forEach((item) => {
-      const kartu = document.createElement("div");
-      kartu.className = "item-riwayat";
-
-      const atas = document.createElement("div");
-      atas.className = "item-atas";
-
-      const nama = document.createElement("strong");
-      nama.textContent = item.nama;
-
-      const nominal = document.createElement("span");
-      nominal.className = "nominal";
-      nominal.textContent = "-" + formatRupiah(item.jumlah);
-
-      atas.append(nama, nominal);
-
-      const detail = document.createElement("p");
-      detail.className = "detail";
-      detail.textContent =
-        item.tanggal + " • " + item.kategori;
-
-      // Tombol edit
-      const tombolEdit = document.createElement("button");
-      tombolEdit.textContent = "Edit";
-      tombolEdit.className = "tombol-edit";
-
-      tombolEdit.addEventListener("click", () => {
-        const namaBaru = prompt(
-          "Nama pengeluaran:",
-          item.nama
-        );
-
-        if (namaBaru === null) return;
-
-        if (!namaBaru.trim()) {
-          alert("Nama pengeluaran tidak boleh kosong.");
-          return;
-        }
-
-        const jumlahBaru = prompt(
-          "Jumlah uang (Rp):",
-          formatAngka(item.jumlah)
-        );
-
-        if (jumlahBaru === null) return;
-
-        const angkaBaru = jumlahBaru.replace(/\D/g, "");
-        const nilaiBaru = Number(angkaBaru);
-
-        if (
-          !angkaBaru ||
-          !Number.isSafeInteger(nilaiBaru) ||
-          nilaiBaru <= 0
-        ) {
-          alert("Nominal tidak valid.");
-          return;
-        }
-
-        const tanggalBaru = prompt(
-          "Tanggal (YYYY-MM-DD):",
-          item.tanggal
-        );
-
-        if (tanggalBaru === null) return;
-
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(tanggalBaru)) {
-          alert("Format tanggal harus YYYY-MM-DD.");
-          return;
-        }
-
-        const tanggalValid = new Date(
-          tanggalBaru + "T12:00:00"
-        );
-
-        if (
-          Number.isNaN(tanggalValid.getTime()) ||
-          tanggalValid.toISOString().slice(0, 10) !== tanggalBaru
-        ) {
-          alert("Tanggal tidak valid.");
-          return;
-        }
-
-        const kategoriBaru = prompt(
-          "Kategori (Makanan, Transportasi, Belanja, Tagihan, Kesehatan, Hiburan, Lainnya):",
-          item.kategori
-        );
-
-        if (kategoriBaru === null) return;
-
-        const pilihanKategori = [
-          "Makanan",
-          "Transportasi",
-          "Belanja",
-          "Tagihan",
-          "Kesehatan",
-          "Hiburan",
-          "Lainnya"
-        ];
-
-        if (!pilihanKategori.includes(kategoriBaru)) {
-          alert("Kategori tidak dikenal.");
-          return;
-        }
-
-        item.nama = namaBaru.trim();
-        item.jumlah = nilaiBaru;
-        item.tanggal = tanggalBaru;
-        item.kategori = kategoriBaru;
-
-        simpanData();
-        tampilkanData();
-      });
-
-      // Tombol hapus
-      const tombolHapus = document.createElement("button");
-      tombolHapus.className = "tombol-hapus";
-      tombolHapus.textContent = "Hapus";
-
-      tombolHapus.addEventListener("click", () => {
-        if (!confirm("Yakin ingin menghapus transaksi ini?")) {
-          return;
-        }
-
-        transaksi = transaksi.filter(
-          (data) => data.id !== item.id
-        );
-
-        if (simpanData()) tampilkanData();
-      });
-
-      const aksi = document.createElement("div");
-      aksi.className = "aksi-transaksi";
-      aksi.append(tombolEdit, tombolHapus);
-
-      kartu.append(atas, detail, aksi);
-      elemenRiwayat.appendChild(kartu);
-    });
-  }
-
-  tampilkanAnggaran();
-}
-
-// ===================================
-// 10. SIMPAN SALDO AWAL
-// ===================================
-const tombolSaldo = document.getElementById("simpanSaldo");
-
-if (tombolSaldo && inputSaldo) {
-  tombolSaldo.addEventListener("click", () => {
-    const nilai = inputSaldo.value.replace(/\D/g, "");
-
-    if (
-      !nilai ||
-      !Number.isSafeInteger(Number(nilai))
-    ) {
-      alert("Masukkan saldo awal yang valid.");
-      return;
-    }
-
-    const saldoBaru = Number(nilai);
-
-    if (saldoBaru < 0) {
-      alert("Saldo tidak boleh negatif.");
-      return;
-    }
-
-    saldoAwal = saldoBaru;
-
-    if (simpanData()) {
-      tampilkanData();
-      inputSaldo.value = "";
-      alert("Saldo awal berhasil disimpan.");
-    }
-  });
-}
-
-// ===================================
-// 11. TAMBAH PENGELUARAN
-// ===================================
-if (form) {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const nama = inputNama.value.trim();
-    const jumlah = Number(
-      inputJumlah.value.replace(/\D/g, "")
-    );
-    const tanggal = inputTanggal.value;
-    const kategori = inputKategori.value;
-
-    if (
-      !nama ||
-      !tanggal ||
-      !Number.isSafeInteger(jumlah) ||
-      jumlah <= 0
-    ) {
-      alert("Periksa nama, tanggal, dan nominal.");
-      return;
-    }
-
-    const total = hitungTotal(transaksi);
-    const sisa = saldoAwal - total;
-
-    if (jumlah > sisa) {
-      const lanjut = confirm(
-        "Pengeluaran melebihi sisa uang. Tetap simpan?"
-      );
-
-      if (!lanjut) return;
-    }
-
-    transaksi.push({
-      id: Date.now().toString() +
-        Math.random().toString(16).slice(2),
-      nama,
-      jumlah,
-      tanggal,
-      kategori
-    });
-
-    if (!simpanData()) {
-      transaksi.pop();
-      return;
-    }
-
-    tampilkanData();
-    form.reset();
-    inputTanggal.value = tanggalHariIni();
-  });
-}
-
-// ===================================
-// 12. SIMPAN ANGGARAN BULANAN
-// ===================================
-if (tombolAnggaran && inputAnggaran) {
-  inputAnggaran.value = anggaran
-    ? formatAngka(anggaran)
-    : "";
-
-  tombolAnggaran.addEventListener("click", () => {
-    const nilai = inputAnggaran.value.replace(/\D/g, "");
-    const angka = Number(nilai);
-
-    if (
-      !nilai ||
-      !Number.isSafeInteger(angka) ||
-      angka <= 0
-    ) {
-      alert("Masukkan anggaran yang valid.");
-      return;
-    }
-
-    const sebelumnya = anggaran;
-    anggaran = angka;
-
-    if (simpanData()) {
-      tampilkanAnggaran();
-      alert("Anggaran bulanan berhasil disimpan.");
-    } else {
-      anggaran = sebelumnya;
-    }
-  });
-}
-
-// ===================================
-// 13. PENCARIAN DAN FILTER KATEGORI
-// ===================================
-if (inputCari) {
-  inputCari.addEventListener("input", tampilkanData);
-}
-
-if (filterKategori) {
-  filterKategori.addEventListener("change", tampilkanData);
-}
-
-// ===================================
-// 14. EKSPOR LAPORAN CSV
-// ===================================
-if (tombolEkspor) {
-  tombolEkspor.addEventListener("click", () => {
-    const amanCSV = (nilai) => {
-      let teks = String(nilai ?? "");
-
-      if (/^[\s]*[=+\-@]/.test(teks)) {
-        teks = "'" + teks;
-      }
-
-      return '"' + teks.replace(/"/g, '""') + '"';
-    };
-
-    const baris = [
-      ["Tanggal", "Nama", "Kategori", "Jumlah (Rp)"],
-      ...transaksi.map((item) => [
-        item.tanggal,
-        item.nama,
-        item.kategori,
-        item.jumlah
-      ])
-    ];
-
-    const isiCSV = "\uFEFF" +
-      baris.map((barisData) =>
-        barisData.map(amanCSV).join(",")
-      ).join("\r\n");
-
-    const file = new Blob([isiCSV], {
-      type: "text/csv;charset=utf-8;"
-    });
-
-    const url = URL.createObjectURL(file);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "laporan-pengeluaran.csv";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  });
-}
-
-// ===================================
-// 15. JALANKAN WEBSITE
-// ===================================
-tampilkanData();
-
-
-/* ==================================
-   GRAFIK PENGELUARAN DOMPETKU
-================================== */
-
-const kanvasGrafik = document.getElementById(
-  "grafikPengeluaran"
-);
-
-const tombolHarian = document.getElementById(
-  "grafikHarian"
-);
-
-const tombolBulanan = document.getElementById(
-  "grafikBulanan"
-);
-
-const ringkasanGrafik = document.getElementById(
-  "ringkasanGrafik"
-);
-
-let modeGrafik = "harian";
-
-function dataGrafik() {
-  const sekarang = new Date();
-  const hasil = [];
-
-  if (modeGrafik === "harian") {
-    for (let mundur = 6; mundur >= 0; mundur--) {
-      const tanggal = new Date(sekarang);
-      tanggal.setHours(12, 0, 0, 0);
-      tanggal.setDate(tanggal.getDate() - mundur);
-
-      const kunci = tanggal.toISOString().slice(0, 10);
-
-      const total = transaksi
-        .filter(item => item.tanggal === kunci)
-        .reduce((jumlah, item) => jumlah + item.jumlah, 0);
-
-      hasil.push({
-        label: tanggal.toLocaleDateString("id-ID", {
-          day: "numeric",
-          month: "short"
-        }),
-        total
-      });
-    }
-  } else {
-    for (let mundur = 5; mundur >= 0; mundur--) {
-      const tanggal = new Date(
-        sekarang.getFullYear(),
-        sekarang.getMonth() - mundur,
-        1
-      );
-
-      const bulan = tanggal.getMonth();
-      const tahun = tanggal.getFullYear();
-
-      const total = transaksi
-        .filter(item => {
-          const t = new Date(item.tanggal + "T12:00:00");
-
-          return (
-            t.getMonth() === bulan &&
-            t.getFullYear() === tahun
-          );
-        })
-        .reduce((jumlah, item) => jumlah + item.jumlah, 0);
-
-      hasil.push({
-        label: tanggal.toLocaleDateString("id-ID", {
-          month: "short"
-        }),
-        total
-      });
-    }
-  }
-
-  return hasil;
-}
-
-function gambarGrafik() {
-  if (!kanvasGrafik) return;
-
-  const konteks = kanvasGrafik.getContext("2d");
-  const kotak = kanvasGrafik.getBoundingClientRect();
-
-  if (!kotak.width || !kotak.height) return;
-
-  const skala = Math.min(window.devicePixelRatio || 1, 2);
-
-  kanvasGrafik.width = kotak.width * skala;
-  kanvasGrafik.height = kotak.height * skala;
-
-  konteks.setTransform(skala, 0, 0, skala, 0, 0);
-  konteks.clearRect(0, 0, kotak.width, kotak.height);
-
-  const data = dataGrafik();
-  const lebar = kotak.width;
-  const tinggi = kotak.height;
-
-  const kiri = 12;
-  const kanan = 12;
-  const atas = 20;
-  const bawah = 35;
-
-  const areaLebar = lebar - kiri - kanan;
-  const areaTinggi = tinggi - atas - bawah;
-
-  const maksimum = Math.max(
-    ...data.map(item => item.total),
-    1
-  );
-
-  // Garis bantu
-  konteks.strokeStyle = "rgba(180, 220, 200, 0.15)";
-  konteks.lineWidth = 1;
-  konteks.font = "10px Arial";
-
-  for (let i = 0; i <= 4; i++) {
-    const y = atas + areaTinggi * i / 4;
-
-    konteks.beginPath();
-    konteks.moveTo(kiri, y);
-    konteks.lineTo(lebar - kanan, y);
-    konteks.stroke();
-  }
-
-  // Garis grafik
-  const titik = data.map((item, indeks) => ({
-    x: data.length === 1
-      ? lebar / 2
-      : kiri + indeks * areaLebar / (data.length - 1),
-    y: atas + areaTinggi -
-      (item.total / maksimum) * areaTinggi,
-    item
-  }));
-
-  // Area di bawah grafik
-  const gradien = konteks.createLinearGradient(
-    0, atas, 0, tinggi - bawah
-  );
-
-  gradien.addColorStop(0, "rgba(8, 165, 121, 0.35)");
-  gradien.addColorStop(1, "rgba(8, 165, 121, 0.01)");
-
-  konteks.beginPath();
-  konteks.moveTo(titik[0].x, tinggi - bawah);
-
-  titik.forEach(p => {
-    konteks.lineTo(p.x, p.y);
-  });
-
-  konteks.lineTo(titik[titik.length - 1].x, tinggi - bawah);
-  konteks.closePath();
-
-  konteks.fillStyle = gradien;
-  konteks.fill();
-
-  // Garis utama
-  konteks.beginPath();
-
-  titik.forEach((p, indeks) => {
-    if (indeks === 0) {
-      konteks.moveTo(p.x, p.y);
-    } else {
-      konteks.lineTo(p.x, p.y);
-    }
-  });
-
-  konteks.strokeStyle = "#42e5a4";
-  konteks.lineWidth = 2.5;
-  konteks.lineJoin = "round";
-  konteks.stroke();
-
-  // Titik dan label tanggal
-  konteks.textAlign = "center";
-  konteks.font = "10px Arial";
-
-  titik.forEach(p => {
-    konteks.beginPath();
-    konteks.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
-    konteks.fillStyle = "#f4cf3a";
-    konteks.fill();
-
-    konteks.fillStyle = "#b7d5c7";
-    konteks.fillText(
-      p.item.label,
-      p.x,
-      tinggi - 12
-    );
-  });
-
-  const totalPeriode = data.reduce(
-    (jumlah, item) => jumlah + item.total,
-    0
-  );
-
-  if (ringkasanGrafik) {
-    ringkasanGrafik.textContent =
-      "Total " +
-      (modeGrafik === "harian"
-        ? "7 hari terakhir: "
-        : "6 bulan terakhir: ") +
-      formatRupiah(totalPeriode);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
-if (tombolHarian) {
-  tombolHarian.addEventListener("click", () => {
-    modeGrafik = "harian";
-
-    tombolHarian.classList.add("aktif");
-    tombolBulanan?.classList.remove("aktif");
-
-    gambarGrafik();
-  });
+.teks-bantuan {
+  color: var(--muted);
+  font-size: 13px;
 }
 
-if (tombolBulanan) {
-  tombolBulanan.addEventListener("click", () => {
-    modeGrafik = "bulanan";
-
-    tombolBulanan.classList.add("aktif");
-    tombolHarian?.classList.remove("aktif");
-
-    gambarGrafik();
-  });
+.pilihan-grafik {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
 }
 
-// Gambar ulang grafik saat ukuran layar berubah
-window.addEventListener("resize", gambarGrafik);
+.pilihan-grafik button {
+  background: #17473a;
+  color: #d9eee4;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
 
-// Perbarui grafik setelah transaksi berubah
-const tampilkanDataAsli = tampilkanData;
+.pilihan-grafik button.aktif {
+  background: var(--green);
+  color: white;
+}
 
-tampilkanData = function () {
-  tampilkanDataAsli();
-  gambarGrafik();
-};
+.wadah-grafik {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #092b25;
+}
 
-gambarGrafik();
+.wadah-grafik canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 
+@media (max-width: 480px) {
+  .wadah-grafik {
+    height: 220px;
+    padding: 6px;
+  }
+}
+
+
+/* TARGET TABUNGAN */
+
+.tabungan-panel {
+  background:
+    radial-gradient(circle at top right, #17634a55, transparent 55%),
+    var(--surface);
+}
+
+.tabungan-panel > button {
+  width: 100%;
+  margin-top: 18px;
+  background: linear-gradient(110deg, #f4cf3a, #e9a928);
+  color: #18392c;
+}
+
+.target-info {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #061f1a80;
+}
+
+.target-angka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+#persenTarget {
+  color: var(--gold);
+  font-size: 24px;
+}
+
+#progressTarget {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #08a579, #f4cf3a);
+  transition: width .4s ease;
+}
+
+#detailTarget {
+  margin-bottom: 0;
+  overflow-wrap: anywhere;
+}
+
+/* NAVIGASI DOMPETKU */
+
+.navigasi-dompet {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px;
+  margin: 18px auto;
+  max-width: 1000px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: .2s ease;
+}
+
+.nav-item:hover,
+.nav-item.aktif {
+  background: linear-gradient(120deg, #087f5b, #0ba77a);
+  color: white;
+  border-color: #25bd91;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+  .navigasi-dompet {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 12px 8px;
+  }
+}
+
+
+/* TEMA TERANG */
+
+body.tema-terang {
+  --bg: #edf5f0;
+  --surface: #ffffff;
+  --surface2: #e1eee6;
+  --white: #183b30;
+  --muted: #60796d;
+  --border: rgba(25, 92, 65, .17);
+
+  background: var(--bg);
+  color: var(--white);
+}
+
+body.tema-terang .panel,
+body.tema-terang .kartu {
+  background: #ffffff;
+}
+
+body.tema-terang input,
+body.tema-terang select {
+  background: #f6faf7;
+  color: #183b30;
+  border-color: #c6d9cd;
+}
+
+body.tema-terang .saldo {
+  background: linear-gradient(135deg, #124b39, #087f5b);
+}
+
+body.tema-terang .saldo,
+body.tema-terang .saldo h2 {
+  color: #f3fbf7;
+}
+
+body.tema-terang .saldo h2 {
+  color: #f4cf3a;
+}
+
+body.tema-terang .target-info,
+body.tema-terang .wadah-grafik {
+  background: #f3f8f4;
+}
+
+body.tema-terang .nav-item {
+  background: #ffffff;
+  color: #365c4b;
+}
+
+body.tema-terang .nav-item.aktif {
+  background: #087f5b;
+  color: #ffffff;
+}
+
+
+/* GRAFIK DONAT KATEGORI */
+
+.panel-kategori {
+  margin-top: 20px;
+}
+
+.donat-layout {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr);
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.donat-kanvas {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  height: 250px;
+  margin: auto;
+}
+
+.donat-kanvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.legenda-kategori {
+  display: grid;
+  gap: 12px;
+}
+
+.item-legenda {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--white);
+  font-size: 13px;
+}
+
+.warna-legenda {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.teks-legenda {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+.nilai-legenda {
+  font-weight: bold;
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .donat-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .donat-kanvas {
+    height: 220px;
+  }
+}
+
+body.tema-terang .item-legenda {
+  color: #183b30;
+}
+
+
+/* FITUR PEMASUKAN */
+
+.kartu-pemasukan {
+  border-color: rgba(8, 165, 121, .4);
+}
+
+.kartu-pemasukan h3 {
+  color: #42e5a4;
+}
+
+#formPemasukan button {
+  width: 100%;
+}
+
+.nominal-masuk {
+  color: #42e5a4;
+  font-weight: bold;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.tombol-hapus-masuk {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #522b30;
+  color: #ffb5b5;
+  font-size: 13px;
+}
+
+body.tema-terang .nominal-masuk {
+  color: #087f5b;
+}
 
 /* =================================
-   TARGET TABUNGAN
+   LOADING SCREEN DOMPETKU
 ================================= */
 
-const elNamaTarget = document.getElementById("namaTarget");
-const elNilaiTarget = document.getElementById("nilaiTarget");
-const elTerkumpul = document.getElementById("tabunganTerkumpul");
-const elSimpanTarget = document.getElementById("simpanTarget");
-
-const elLabelTarget = document.getElementById("labelTarget");
-const elPersenTarget = document.getElementById("persenTarget");
-const elProgressTarget = document.getElementById("progressTarget");
-const elDetailTarget = document.getElementById("detailTarget");
-
-function angkaBersih(input) {
-  return Number(input.value.replace(/\D/g, ""));
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(8, 165, 121, .24),
+      transparent 42%
+    ),
+    #071d19;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity .55s ease,
+    visibility .55s ease;
 }
 
-function formatInputTarget(input) {
-  input.addEventListener("input", () => {
-    const angka = input.value.replace(/\D/g, "").slice(0, 15);
-    input.value = angka ? formatAngka(Number(angka)) : "";
-  });
+#loadingScreen.loading-selesai {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-formatInputTarget(elNilaiTarget);
-formatInputTarget(elTerkumpul);
-
-function bacaTarget() {
-  try {
-    const data = JSON.parse(
-      localStorage.getItem("dompet_target") || "{}"
-    );
-
-    return {
-      nama: typeof data.nama === "string" ? data.nama : "",
-      target: Number.isSafeInteger(data.target) && data.target > 0
-        ? data.target : 0,
-      terkumpul: Number.isSafeInteger(data.terkumpul) &&
-        data.terkumpul >= 0 ? data.terkumpul : 0
-    };
-  } catch {
-    return { nama: "", target: 0, terkumpul: 0 };
-  }
+.loading-content {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+  animation: loadingMasuk .8s ease both;
 }
 
-let targetTabungan = bacaTarget();
-
-function tampilkanTarget() {
-  const target = targetTabungan.target;
-  const terkumpul = targetTabungan.terkumpul;
-
-  const persen = target > 0
-    ? Math.floor(terkumpul / target * 100)
-    : 0;
-
-  elLabelTarget.textContent =
-    targetTabungan.nama || "Target tabungan";
-
-  elPersenTarget.textContent = persen + "%";
-
-  elProgressTarget.style.width =
-    Math.min(persen, 100) + "%";
-
-  if (target <= 0) {
-    elDetailTarget.textContent =
-      "Tentukan target uang untuk mulai menabung.";
-    return;
-  }
-
-  const sisa = Math.max(target - terkumpul, 0);
-
-  elDetailTarget.textContent = sisa === 0
-    ? "🎉 Selamat! Target tabunganmu tercapai."
-    : "Terkumpul " + formatRupiah(terkumpul) +
-      " dari " + formatRupiah(target) +
-      ". Kurang " + formatRupiah(sisa) + " lagi.";
+.loading-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 18px;
+  border: 2px solid #f4cf3a;
+  border-radius: 27px;
+  background: linear-gradient(145deg, #087f5b, #064434);
+  color: #f4cf3a;
+  font-size: 48px;
+  font-weight: 800;
+  box-shadow: 0 0 35px #08a57945;
+  animation: logoMengambang 2s ease-in-out infinite;
 }
 
-elSimpanTarget.addEventListener("click", () => {
-  const nama = elNamaTarget.value.trim();
-  const target = angkaBersih(elNilaiTarget);
-  const terkumpul = angkaBersih(elTerkumpul);
-
-  if (!nama) {
-    alert("Masukkan nama target tabungan.");
-    return;
-  }
-
-  if (
-    !Number.isSafeInteger(target) ||
-    target <= 0 ||
-    !Number.isSafeInteger(terkumpul)
-  ) {
-    alert("Periksa kembali nominal target dan tabungan.");
-    return;
-  }
-
-  const dataLama = targetTabungan;
-
-  targetTabungan = { nama, target, terkumpul };
-
-  try {
-    localStorage.setItem(
-      "dompet_target",
-      JSON.stringify(targetTabungan)
-    );
-  } catch {
-    targetTabungan = dataLama;
-    alert("Target gagal disimpan di browser.");
-    return;
-  }
-
-  tampilkanTarget();
-  alert("Target tabungan berhasil disimpan!");
-});
-
-elNamaTarget.value = targetTabungan.nama;
-elNilaiTarget.value = targetTabungan.target
-  ? formatAngka(targetTabungan.target) : "";
-elTerkumpul.value = formatAngka(targetTabungan.terkumpul);
-
-tampilkanTarget();
-
-
-/* NAVIGASI DAN TEMA DOMPETKU */
-
-const semuaNav = document.querySelectorAll(".nav-item");
-
-semuaNav.forEach((nav) => {
-  nav.addEventListener("click", () => {
-    semuaNav.forEach((item) => item.classList.remove("aktif"));
-    nav.classList.add("aktif");
-  });
-});
-
-const tombolTema = document.getElementById("tombolTema");
-
-function aturTema(gelap) {
-  document.body.classList.toggle("tema-terang", !gelap);
-
-  if (tombolTema) {
-    tombolTema.textContent = gelap
-      ? "☀️ Ganti ke Tema Terang"
-      : "🌙 Ganti ke Tema Gelap";
-  }
-
-  localStorage.setItem("dompet_tema", gelap ? "gelap" : "terang");
+.loading-content h1 {
+  margin: 0;
+  color: #f4cf3a;
+  font-size: 34px;
+  letter-spacing: -1px;
 }
 
-const temaTersimpan = localStorage.getItem("dompet_tema");
-
-aturTema(temaTersimpan !== "terang");
-
-if (tombolTema) {
-  tombolTema.addEventListener("click", () => {
-    const sedangTerang =
-      document.body.classList.contains("tema-terang");
-
-    aturTema(sedangTerang);
-  });
+.loading-content h1 span {
+  color: #f3fbf7;
 }
 
-
-/* ==================================
-   GRAFIK DONAT KATEGORI
-================================== */
-
-const kanvasKategori = document.getElementById("grafikKategori");
-const legendaKategori = document.getElementById("legendaKategori");
-const totalKategori = document.getElementById("totalKategori");
-
-const warnaKategori = [
-  "#08a579",
-  "#f4cf3a",
-  "#5c8dff",
-  "#bb7af5",
-  "#ff7979",
-  "#42c8d5",
-  "#f39c55",
-  "#a6d96a"
-];
-
-function gambarKategori() {
-  if (!kanvasKategori || !legendaKategori) return;
-
-  const konteks = kanvasKategori.getContext("2d");
-  const kotak = kanvasKategori.getBoundingClientRect();
-
-  if (!kotak.width || !kotak.height) return;
-
-  const skala = Math.min(window.devicePixelRatio || 1, 2);
-
-  kanvasKategori.width = kotak.width * skala;
-  kanvasKategori.height = kotak.height * skala;
-
-  konteks.setTransform(skala, 0, 0, skala, 0, 0);
-  konteks.clearRect(0, 0, kotak.width, kotak.height);
-
-  // Kelompokkan transaksi berdasarkan kategori
-  const kelompok = {};
-
-  transaksi.forEach((item) => {
-    const kategori = item.kategori || "Lainnya";
-    kelompok[kategori] =
-      (kelompok[kategori] || 0) + Number(item.jumlah || 0);
-  });
-
-  const data = Object.entries(kelompok)
-    .filter(([, jumlah]) => jumlah > 0)
-    .sort((a, b) => b[1] - a[1]);
-
-  const total = data.reduce(
-    (jumlah, item) => jumlah + item[1],
-    0
-  );
-
-  if (totalKategori) {
-    totalKategori.textContent =
-      "Total pengeluaran: " + formatRupiah(total);
-  }
-
-  legendaKategori.replaceChildren();
-
-  if (data.length === 0) {
-    konteks.fillStyle = "#78958a";
-    konteks.font = "14px Arial";
-    konteks.textAlign = "center";
-    konteks.textBaseline = "middle";
-    konteks.fillText(
-      "Belum ada transaksi",
-      kotak.width / 2,
-      kotak.height / 2
-    );
-
-    const pesan = document.createElement("p");
-    pesan.className = "teks-bantuan";
-    pesan.textContent = "Tambahkan pengeluaran untuk melihat grafik.";
-    legendaKategori.appendChild(pesan);
-    return;
-  }
-
-  const ukuran = Math.min(kotak.width, kotak.height);
-  const radiusLuar = ukuran * 0.39;
-  const radiusDalam = radiusLuar * 0.62;
-
-  let sudut = -Math.PI / 2;
-
-  data.forEach(([kategori, jumlah], indeks) => {
-    const bagian = jumlah / total * Math.PI * 2;
-    const warna = warnaKategori[indeks % warnaKategori.length];
-
-    konteks.beginPath();
-    konteks.moveTo(kotak.width / 2, kotak.height / 2);
-    konteks.arc(
-      kotak.width / 2,
-      kotak.height / 2,
-      radiusLuar,
-      sudut,
-      sudut + bagian
-    );
-    konteks.closePath();
-    konteks.fillStyle = warna;
-    konteks.fill();
-
-    sudut += bagian;
-
-    const itemLegenda = document.createElement("div");
-    itemLegenda.className = "item-legenda";
-
-    const kotakWarna = document.createElement("span");
-    kotakWarna.className = "warna-legenda";
-    kotakWarna.style.backgroundColor = warna;
-
-    const nama = document.createElement("span");
-    nama.className = "teks-legenda";
-    nama.textContent = kategori;
-
-    const nilai = document.createElement("span");
-    nilai.className = "nilai-legenda";
-    nilai.textContent =
-      formatRupiah(jumlah) +
-      " (" + (jumlah / total * 100).toFixed(1) + "%)";
-
-    itemLegenda.append(kotakWarna, nama, nilai);
-    legendaKategori.appendChild(itemLegenda);
-  });
-
-  // Lubang donat
-  konteks.beginPath();
-  konteks.arc(
-    kotak.width / 2,
-    kotak.height / 2,
-    radiusDalam,
-    0,
-    Math.PI * 2
-  );
-  konteks.fillStyle = getComputedStyle(
-    kanvasKategori.closest(".panel-kategori")
-  ).backgroundColor;
-
-  // Warna tengah mengikuti latar panel jika solid.
-  konteks.fill();
-
-  // Jumlah total di tengah
-  konteks.fillStyle =
-    document.body.classList.contains("tema-terang")
-      ? "#183b30"
-      : "#f3fbf7";
-
-  konteks.font = "bold 13px Arial";
-  konteks.textAlign = "center";
-  konteks.textBaseline = "middle";
-  konteks.fillText("TOTAL", kotak.width / 2, kotak.height / 2 - 10);
-
-  konteks.font = "bold 12px Arial";
-  konteks.fillText(
-    total >= 1000000
-      ? "Rp" + (total / 1000000).toFixed(1) + " jt"
-      : total >= 1000
-        ? "Rp" + (total / 1000).toFixed(0) + " rb"
-        : formatRupiah(total),
-    kotak.width / 2,
-    kotak.height / 2 + 11
-  );
+.loading-content p {
+  margin: 8px 0 28px;
+  color: #a7c4b7;
+  font-size: 14px;
 }
 
-// Gambar pertama kali
-gambarKategori();
-
-// Perbarui grafik setelah data transaksi berubah
-const tampilkanDataSebelumnya = tampilkanData;
-
-tampilkanData = function () {
-  tampilkanDataSebelumnya();
-  gambarKategori();
-};
-
-// Gambar ulang ketika ukuran layar berubah
-window.addEventListener("resize", gambarKategori);
-
-
-/* ==================================
-   FITUR PEMASUKAN DOMPETKU
-================================== */
-
-const formPemasukan = document.getElementById("formPemasukan");
-const inputNamaMasuk = document.getElementById("namaPemasukan");
-const inputJumlahMasuk = document.getElementById("jumlahPemasukan");
-const inputTanggalMasuk = document.getElementById("tanggalPemasukan");
-const inputKategoriMasuk = document.getElementById("kategoriPemasukan");
-const daftarPemasukan = document.getElementById("riwayatPemasukan");
-
-let pemasukan = [];
-
-try {
-  const dataTersimpan = JSON.parse(
-    localStorage.getItem("dompet_pemasukan") || "[]"
-  );
-
-  if (Array.isArray(dataTersimpan)) {
-    pemasukan = dataTersimpan.filter(item =>
-      item &&
-      typeof item.id === "string" &&
-      typeof item.nama === "string" &&
-      typeof item.tanggal === "string" &&
-      typeof item.kategori === "string" &&
-      Number.isSafeInteger(item.jumlah) &&
-      item.jumlah > 0
-    );
-  }
-} catch {
-  pemasukan = [];
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+  margin: 0 auto 20px;
+  border: 3px solid #245548;
+  border-top-color: #f4cf3a;
+  border-right-color: #08a579;
+  border-radius: 50%;
+  animation: loadingPutar .8s linear infinite;
 }
 
-// Format nominal dengan titik ribuan
-function formatNominalMasuk(angka) {
-  return angka.toLocaleString("id-ID");
+.loading-progress {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #1b4236;
 }
 
-inputJumlahMasuk.addEventListener("input", () => {
-  const angka = inputJumlahMasuk.value
-    .replace(/\D/g, "")
-    .slice(0, 15);
-
-  inputJumlahMasuk.value = angka
-    ? formatNominalMasuk(Number(angka))
-    : "";
-});
-
-// Isi tanggal hari ini
-function tanggalLokalMasuk() {
-  const sekarang = new Date();
-  sekarang.setMinutes(
-    sekarang.getMinutes() - sekarang.getTimezoneOffset()
-  );
-  return sekarang.toISOString().slice(0, 10);
+#loadingBar {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #08a579, #f4cf3a);
+  transition: width .15s linear;
 }
 
-inputTanggalMasuk.value = tanggalLokalMasuk();
+.loading-content small {
+  display: block;
+  margin-top: 13px;
+  color: #a7c4b7;
+  font-size: 12px;
+}
 
-function simpanPemasukan() {
-  try {
-    localStorage.setItem(
-      "dompet_pemasukan",
-      JSON.stringify(pemasukan)
-    );
-    return true;
-  } catch {
-    alert("Pemasukan gagal disimpan. Penyimpanan browser mungkin penuh.");
-    return false;
+@keyframes loadingPutar {
+  to {
+    transform: rotate(360deg);
   }
 }
 
-function hitungTotalPemasukan() {
-  return pemasukan.reduce(
-    (total, item) => total + item.jumlah,
-    0
-  );
+@keyframes logoMengambang {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
 }
 
-function tampilkanRiwayatPemasukan() {
-  const totalMasuk = hitungTotalPemasukan();
-
-  document.getElementById("totalPemasukan").textContent =
-    formatRupiah(totalMasuk);
-
-  daftarPemasukan.replaceChildren();
-
-  if (pemasukan.length === 0) {
-    const pesan = document.createElement("p");
-    pesan.className = "kosong";
-    pesan.textContent = "Belum ada pemasukan.";
-    daftarPemasukan.appendChild(pesan);
-    return;
+@keyframes loadingMasuk {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(.96);
   }
-
-  [...pemasukan].reverse().forEach(item => {
-    const kartu = document.createElement("div");
-    kartu.className = "item-riwayat";
-
-    const atas = document.createElement("div");
-    atas.className = "item-atas";
-
-    const nama = document.createElement("strong");
-    nama.textContent = item.nama;
-
-    const nominal = document.createElement("span");
-    nominal.className = "nominal-masuk";
-    nominal.textContent = "+" + formatRupiah(item.jumlah);
-
-    atas.append(nama, nominal);
-
-    const detail = document.createElement("p");
-    detail.className = "detail";
-    detail.textContent = item.tanggal + " • " + item.kategori;
-
-    const hapus = document.createElement("button");
-    hapus.type = "button";
-    hapus.className = "tombol-hapus-masuk";
-    hapus.textContent = "Hapus";
-
-    hapus.addEventListener("click", () => {
-      if (!confirm("Hapus catatan pemasukan ini?")) return;
-
-      const lama = pemasukan;
-      pemasukan = pemasukan.filter(data => data.id !== item.id);
-
-      if (!simpanPemasukan()) {
-        pemasukan = lama;
-        return;
-      }
-
-      perbaruiKeuangan();
-    });
-
-    kartu.append(atas, detail, hapus);
-    daftarPemasukan.appendChild(kartu);
-  });
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-// Perbarui saldo: saldo awal + pemasukan - pengeluaran
-const tampilkanDataSebelumPemasukan = tampilkanData;
-
-function perbaruiKeuangan() {
-  tampilkanDataSebelumPemasukan();
-
-  const totalMasuk = hitungTotalPemasukan();
-  const totalKeluar = transaksi.reduce(
-    (total, item) => total + item.jumlah,
-    0
-  );
-
-  document.getElementById("sisaUang").textContent =
-    formatRupiah(saldoAwal + totalMasuk - totalKeluar);
-
-  document.getElementById("totalPemasukan").textContent =
-    formatRupiah(totalMasuk);
-
-  tampilkanRiwayatPemasukan();
+@media (prefers-reduced-motion: reduce) {
+  #loadingScreen,
+  .loading-content,
+  .loading-logo,
+  .loading-spinner {
+    animation: none;
+    transition: none;
+  }
 }
-
-formPemasukan.addEventListener("submit", event => {
-  event.preventDefault();
-
-  const nama = inputNamaMasuk.value.trim();
-  const teksJumlah = inputJumlahMasuk.value.replace(/\D/g, "");
-  const jumlah = Number(teksJumlah);
-  const tanggal = inputTanggalMasuk.value;
-
-  if (
-    !nama ||
-    !tanggal ||
-    !teksJumlah ||
-    !Number.isSafeInteger(jumlah) ||
-    jumlah <= 0
-  ) {
-    alert("Periksa kembali nama, tanggal, dan nominal pemasukan.");
-    return;
-  }
-
-  const itemBaru = {
-    id: Date.now().toString() +
-      Math.random().toString(16).slice(2),
-    nama,
-    jumlah,
-    tanggal,
-    kategori: inputKategoriMasuk.value
-  };
-
-  pemasukan.push(itemBaru);
-
-  if (!simpanPemasukan()) {
-    pemasukan.pop();
-    return;
-  }
-
-  formPemasukan.reset();
-  inputTanggalMasuk.value = tanggalLokalMasuk();
-
-  perbaruiKeuangan();
-  alert("Pemasukan berhasil disimpan!");
-});
-
-// Tampilkan data awal
-perbaruiKeuangan();
-
-
-/* SINKRONISASI SALDO DOMPETKU */
-
-tampilkanData = function () {
-  tampilkanDataSebelumPemasukan();
-
-  const totalMasuk = hitungTotalPemasukan();
-  const totalKeluar = transaksi.reduce(
-    (total, item) => total + item.jumlah,
-    0
-  );
-
-  document.getElementById("sisaUang").textContent =
-    formatRupiah(saldoAwal + totalMasuk - totalKeluar);
-
-  document.getElementById("totalPemasukan").textContent =
-    formatRupiah(totalMasuk);
-  tampilkanDashboardPintar();
-};
-
-
-/* =================================
-   LOADING AWAL DOMPETKU
-================================= */
-
-(() => {
-  const layar = document.getElementById("loadingScreen");
-  const bar = document.getElementById("loadingBar");
-  const teks = document.getElementById("loadingText");
-
-  if (!layar) return;
-
-  let selesai = false;
-  const mulai = Date.now();
-
-  function tutupLoading() {
-    if (selesai) return;
-    selesai = true;
-
-    if (bar) bar.style.width = "100%";
-    if (teks) teks.textContent = "DompetKu siap digunakan!";
-
-    const sisaWaktu = Math.max(
-      0,
-      1500 - (Date.now() - mulai)
-    );
-
-    setTimeout(() => {
-      layar.classList.add("loading-selesai");
-
-      setTimeout(() => {
-        layar.remove();
-      }, 600);
-    }, sisaWaktu);
-  }
-
-  // Animasi progres hanya untuk efek visual.
-  let progres = 0;
-
-  const animasi = setInterval(() => {
-    progres = Math.min(progres + Math.random() * 13 + 4, 90);
-
-    if (bar) bar.style.width = progres + "%";
-  }, 120);
-
-  function mulaiTutup() {
-    clearInterval(animasi);
-    tutupLoading();
-  }
-
-  if (document.readyState === "complete") {
-    mulaiTutup();
-  } else {
-    window.addEventListener("load", mulaiTutup, {
-      once: true
-    });
-  }
-})();
 
 
 /* =========================================
-   FITUR 1: DASHBOARD PINTAR DOMPETKU
+   FITUR 1: DASHBOARD PINTAR
 ========================================= */
-function nilaiBulanIni(daftar) {
-  const sekarang = new Date();
-  return daftar.filter(item => {
-    if (!item || typeof item.tanggal !== "string") return false;
-    const tanggal = new Date(item.tanggal + "T12:00:00");
-    return !Number.isNaN(tanggal.getTime()) &&
-      tanggal.getMonth() === sekarang.getMonth() &&
-      tanggal.getFullYear() === sekarang.getFullYear();
-  }).reduce((total, item) => total + Number(item.jumlah || 0), 0);
+.dashboard-pintar {
+  background:
+    radial-gradient(circle at top right, rgba(8, 165, 121, .16), transparent 48%),
+    rgba(13, 48, 41, .96);
 }
-
-function tampilkanDashboardPintar() {
-  const elKeluar = document.getElementById("pintarPengeluaranBulan");
-  const elMasuk = document.getElementById("pintarPemasukanBulan");
-  const elKategori = document.getElementById("pintarKategoriTerbesar");
-  const elRata = document.getElementById("pintarRataRata");
-  const elStatus = document.getElementById("statusKeuangan");
-  const elSaran = document.getElementById("saranKeuangan");
-  if (!elKeluar || !elMasuk || !elKategori || !elRata || !elStatus || !elSaran) return;
-
-  const keluarBulan = nilaiBulanIni(transaksi);
-  const masukBulan = nilaiBulanIni(Array.isArray(pemasukan) ? pemasukan : []);
-  const transaksiBulan = transaksi.filter(item => {
-    if (!item || typeof item.tanggal !== "string") return false;
-    const tanggal = new Date(item.tanggal + "T12:00:00");
-    const sekarang = new Date();
-    return !Number.isNaN(tanggal.getTime()) &&
-      tanggal.getMonth() === sekarang.getMonth() &&
-      tanggal.getFullYear() === sekarang.getFullYear();
-  });
-
-  const jumlahKategori = {};
-  transaksiBulan.forEach(item => {
-    const kategori = String(item.kategori || "Lainnya");
-    jumlahKategori[kategori] = (jumlahKategori[kategori] || 0) + Number(item.jumlah || 0);
-  });
-
-  const kategoriTerbesar = Object.entries(jumlahKategori)
-    .sort((a, b) => b[1] - a[1])[0];
-
-  const hariUnik = new Set(transaksiBulan.map(item => item.tanggal)).size;
-  const rataRata = hariUnik > 0 ? Math.round(keluarBulan / hariUnik) : 0;
-
-  elKeluar.textContent = formatRupiah(keluarBulan);
-  elMasuk.textContent = formatRupiah(masukBulan);
-  elKategori.textContent = kategoriTerbesar ? kategoriTerbesar[0] : "Belum ada";
-  elRata.textContent = formatRupiah(rataRata);
-
-  const saldoSaatIni = saldoAwal +
-    (Array.isArray(pemasukan) ? pemasukan.reduce((sum, item) => sum + Number(item.jumlah || 0), 0) : 0) -
-    transaksi.reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
-
-  let status = "Terkendali";
-  let saran = "Bagus! Terus catat transaksi agar kondisi keuanganmu tetap terpantau.";
-
-  if (anggaran > 0 && keluarBulan >= anggaran) {
-    status = "Anggaran lewat";
-    saran = "Pengeluaran bulan ini sudah mencapai atau melewati batas anggaran. Tunda belanja yang tidak mendesak.";
-  } else if (anggaran > 0 && keluarBulan >= anggaran * 0.8) {
-    status = "Hampir batas";
-    saran = "Pengeluaran sudah mencapai 80% anggaran. Periksa kembali belanja yang masih bisa dikurangi.";
-  } else if (saldoSaatIni < 0) {
-    status = "Saldo minus";
-    saran = "Total pengeluaran melebihi uang yang tercatat. Periksa transaksi dan catat pemasukan bila ada.";
-  } else if (keluarBulan === 0 && masukBulan === 0) {
-    status = "Belum ada data";
-    saran = "Mulai catat pemasukan dan pengeluaran bulan ini agar DompetKu bisa memberi ringkasan yang lebih berguna.";
-  } else if (kategoriTerbesar) {
-    saran = "Pengeluaran terbesar bulan ini ada di kategori " + kategoriTerbesar[0] +
-      " sebesar " + formatRupiah(kategoriTerbesar[1]) + ". Cek apakah ada yang bisa dihemat.";
-  }
-
-  elStatus.textContent = status;
-  elStatus.classList.toggle("status-waspada", status === "Hampir batas" || status === "Anggaran lewat" || status === "Saldo minus");
-  elSaran.textContent = saran;
+.dashboard-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-
-
-// Render Dashboard Pintar setelah data awal dimuat.
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", tampilkanDashboardPintar, { once: true });
-} else {
-  tampilkanDashboardPintar();
+.dashboard-heading h2 { margin-bottom: 4px; }
+.label-kecil {
+  margin: 0 0 4px;
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+.status-dashboard {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(8, 165, 121, .16);
+  border: 1px solid rgba(66, 229, 164, .35);
+  color: #75edbd;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-dashboard.status-waspada {
+  background: rgba(255, 98, 98, .12);
+  border-color: rgba(255, 119, 119, .45);
+  color: #ffaaaa;
+}
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.dashboard-mini {
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(4, 27, 22, .42);
+}
+.dashboard-mini span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dashboard-mini strong {
+  display: block;
+  color: var(--white);
+  font-size: clamp(15px, 3.4vw, 21px);
+  overflow-wrap: anywhere;
+}
+.saran-dashboard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(244, 207, 58, .08);
+  border: 1px solid rgba(244, 207, 58, .22);
+}
+.saran-dashboard > span { font-size: 20px; }
+.saran-dashboard p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+body.tema-terang .dashboard-pintar { background: #fff; }
+body.tema-terang .dashboard-mini { background: #f4faf6; }
+body.tema-terang .dashboard-mini strong { color: #183b30; }
+@media (max-width: 380px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
