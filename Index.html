@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catatan Pengluaran</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+      
+<nav class="navigasi-dompet">
+  <a href="#beranda" class="nav-item aktif" data-halaman="beranda">
+    🏠 <span>Beranda</span>
+  </a>
+  <a href="#transaksi" class="nav-item" data-halaman="transaksi">
+    💳 <span>Transaksi</span>
+  </a>
+  <a href="#laporan" class="nav-item" data-halaman="laporan">
+    📊 <span>Laporan</span>
+  </a>
+  <a href="#pengaturan" class="nav-item" data-halaman="pengaturan">
+    ⚙️ <span>Pengaturan</span>
+  </a>
+</nav>
+      
+    <header>
+    <h1>Dompetku</h1>
+    <P>Catatan Keuangan</P>
+    </header>
+    <main>
+      <section class="saldo">
+        <p>Sisa Uang</p>
+        <h2 id="sisaUang">Rp0</h2>
+
+        <label for="saldoAwal">Saldo awal(Rp)</label>
+        <div class="baris">
+          <input 
+            type="number"
+            id="saldoAwal"
+            placeholder="Mauskkan saldo awal"
+            min="0"
+            >
+          <button id="simpanSaldo">Simpan</button>
+        </div>
+      </section>
+
+      <section class="ringkasan">
+        <div class="kartu">
+          <p>Total pengeluaran</p>
+          <h3 id="totalPengelaran">Rp0</h3>
+        </div>
+        <div class="kartu">
+          <p>Jumlah Transaksi</p>
+          <h3 id="jumlahTransaksi">0</h3>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tambah Pengeluaran</h2>
+
+        <form id="formPengeluaran">
+          <label for="nama">Nama pengeluaran</label>
+          <input 
+            type="text"
+            id="nama"
+            placeholder="contoh: Makan siang"
+            required
+            >
+          
+          <label for="jumlah"> Jumlah Uang(Rp)</label>
+          <input
+            type="text"
+            id="jumlah"
+            placeholder="Contoh: 50.00"
+            inputmode="numeric"
+            autocomplete="off"
+            required
+            >
+
+          <label for="tanggal">Tanggal</label>
+          <input type="data" id="tanggal"
+            required>
+
+          <label for="kategori">Kategori</label> 
+          <select id="kategori">
+            <option>Makanan</option>
+            <option>Transportasi</option>
+            <option>Belanja</option>
+            <option>Kesehatn</option>
+            <option>Hiburan</option>
+            <option>lainnya</option>
+          </select>
+
+          <button type="submit"
+            class="tombol-tambah">
+                  + simpan Pengluaran
+            </button>                     
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Riwayat Pengluaran</h2>
+        <div id="riwayat" class="riwayat"</div>
+      </section>
+        
+<!-- Anggaran bulanan -->
+<section class="panel">
+  <h2>🎯 Anggaran Bulanan</h2>
+  <label for="anggaran">Batas pengeluaran per bulan (Rp)</label>
+  <div class="baris">
+    <input
+      type="text"
+      id="anggaran"
+      inputmode="numeric"
+      placeholder="Contoh: 1.000.000"
+    >
+    <button id="simpanAnggaran">Simpan</button>
+  </div>
+
+  <p id="infoAnggaran">Atur anggaran bulananmu.</p>
+  <div class="progress">
+    <div id="progressAnggaran"></div>
+  </div>
+
+    
+<!-- Grafik Kategori -->
+<div class="panel panel-kategori">
+  <h2>🍩 Pengeluaran per Kategori</h2>
+  <p class="teks-bantuan">
+    Lihat ke mana uangmu paling banyak digunakan.
+  </p>
+
+  <div class="donat-layout">
+    <div class="donat-kanvas">
+      <canvas
+        id="grafikKategori"
+        role="img"
+        aria-label="Grafik donat pengeluaran per kategori">
+      </canvas>
+    </div>
+
+    <div id="legendaKategori" class="legenda-kategori"></div>
+  </div>
+
+  <p id="totalKategori" class="teks-bantuan">
+    Total pengeluaran: Rp0
+  </p>
+</div>
+
+</section>
+
+<!-- Cari transaksi -->
+<section class="panel">
+  <h2>🔎 Cari Transaksi</h2>
+  <input
+    type="search"
+    id="cariTransaksi"
+    placeholder="Cari nama pengeluaran..."
+  >
+
+  <label for="filterKategori">Filter kategori</label>
+  <select id="filterKategori">
+    <option value="">Semua kategori</option>
+    <option>Makanan</option>
+    <option>Transportasi</option>
+    <option>Belanja</option>
+    <option>Tagihan</option>
+    <option>Kesehatan</option>
+    <option>Hiburan</option>
+    <option>Lainnya</option>
+  </select>
+
+  <button id="eksporCSV" class="tombol-tambah">
+    📥 Unduh Laporan CSV
+  </button>
+</section>
+        
+<!-- Grafik Pengeluaran -->
+<section class="panel" id="bagianGrafik">
+  <h2>📊 Analisis Pengeluaran</h2>
+  <p class="teks-bantuan">
+    Pantau pola pengeluaranmu agar keuangan tetap terkontrol.
+  </p>
+
+  <div class="pilihan-grafik">
+    <button type="button" id="grafikHarian" class="aktif">
+      7 Hari Terakhir
+    </button>
+    <button type="button" id="grafikBulanan">
+      6 Bulan Terakhir
+    </button>
+  </div>
+
+  <div class="wadah-grafik">
+    <canvas id="grafikPengeluaran"
+      role="img"
+      aria-label="Grafik pengeluaran uang">
+    </canvas>
+  </div>
+
+  <p id="ringkasanGrafik" class="teks-bantuan">
+    Grafik pengeluaran akan ditampilkan di sini.
+  </p>
+</section>
+        
+<section class="panel tabungan-panel">
+  <h2>🎯 Target Tabungan</h2>
+  <p class="teks-bantuan">
+    Sedikit demi sedikit, capai impianmu.
+  </p>
+
+  <label for="namaTarget">Nama target</label>
+  <input
+    id="namaTarget"
+    type="text"
+    placeholder="Contoh: Beli laptop"
+  />
+
+  <label for="nilaiTarget">Target uang (Rp)</label>
+  <input
+    id="nilaiTarget"
+    type="text"
+    inputmode="numeric"
+    placeholder="5.000.000"
+  />
+
+  <label for="tabunganTerkumpul">Uang terkumpul (Rp)</label>
+  <input
+    id="tabunganTerkumpul"
+    type="text"
+    inputmode="numeric"
+    placeholder="0"
+  />
+
+  <button id="simpanTarget" type="button">
+    Simpan Target
+  </button>
+
+  <div class="target-info">
+    <div class="target-angka">
+      <span id="labelTarget">Target tabungan</span>
+      <strong id="persenTarget">0%</strong>
+    </div>
+
+    <div class="progress">
+      <div id="progressTarget"></div>
+    </div>
+
+    <p id="detailTarget" class="teks-bantuan">
+      Mulai tetapkan target tabunganmu.
+    </p>
+  </div>
+</section>
+        
+<section class="panel" id="pengaturan">
+  <h2>⚙️ Pengaturan</h2>
+  <p class="teks-bantuan">
+    Kelola preferensi tampilan DompetKu.</p>
+
+    
+<!-- RINGKASAN PEMASUKAN -->
+<div class="kartu kartu-pemasukan">
+  <p>Total pemasukan</p>
+  <h3 id="totalPemasukan">Rp0</h3>
+</div>
+
+<!-- FORM TAMBAH PEMASUKAN -->
+<section class="panel" id="bagianPemasukan">
+  <h2>💰 Tambah Pemasukan</h2>
+  <p class="teks-bantuan">
+    Catat setiap uang yang masuk.
+  </p>
+
+  <form id="formPemasukan">
+    <label for="namaPemasukan">Sumber pemasukan</label>
+    <input
+      id="namaPemasukan"
+      type="text"
+      placeholder="Contoh: Gaji atau hasil usaha"
+      required
+    />
+
+    <label for="jumlahPemasukan">Nominal (Rp)</label>
+    <input
+      id="jumlahPemasukan"
+      type="text"
+      inputmode="numeric"
+      placeholder="Contoh: 1.000.000"
+      required
+    />
+
+    <label for="tanggalPemasukan">Tanggal</label>
+    <input
+      id="tanggalPemasukan"
+      type="date"
+      required
+    />
+
+    <label for="kategoriPemasukan">Kategori pemasukan</label>
+    <select id="kategoriPemasukan">
+      <option value="Gaji">Gaji</option>
+      <option value="Usaha">Usaha</option>
+      <option value="Bonus">Bonus</option>
+      <option value="Hadiah">Hadiah</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <button class="tombol-tambah" type="submit">
+      + Simpan Pemasukan
+    </button>
+  </form>
+</section>
+
+<!-- RIWAYAT PEMASUKAN -->
+<section class="panel" id="riwayatPemasukanPanel">
+  <h2>📥 Riwayat Pemasukan</h2>
+  <div id="riwayatPemasukan">
+    <p class="kosong">Belum ada pemasukan.</p>
+  </div>
+</section>
+
+
+  <button type="button" id="tombolTema">
+    🌙 Ganti Tema
+  </button>
+</section>
+
+
+    </main>
+
+    <footer>
+      <p>DompetKu . Kelola uang dengan bijak</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
