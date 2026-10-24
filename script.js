@@ -60,7 +60,7 @@ const inputTanggal = document.getElementById("tanggal");
 const inputKategori = document.getElementById("kategori");
 
 const elemenSisa = document.getElementById("sisaUang");
-const elemenTotal = document.getElementById("totalPengeluaran");
+const elemenTotal = document.getElementById("totalPengeluaran") || document.getElementById("totalPengelaran");
 const elemenJumlah = document.getElementById("jumlahTransaksi");
 const elemenRiwayat = document.getElementById("riwayat");
 
@@ -1394,4 +1394,153 @@ tampilkanData = function () {
 
   document.getElementById("totalPemasukan").textContent =
     formatRupiah(totalMasuk);
+  tampilkanDashboardPintar();
 };
+
+
+/* =================================
+   LOADING AWAL DOMPETKU
+================================= */
+
+(() => {
+  const layar = document.getElementById("loadingScreen");
+  const bar = document.getElementById("loadingBar");
+  const teks = document.getElementById("loadingText");
+
+  if (!layar) return;
+
+  let selesai = false;
+  const mulai = Date.now();
+
+  function tutupLoading() {
+    if (selesai) return;
+    selesai = true;
+
+    if (bar) bar.style.width = "100%";
+    if (teks) teks.textContent = "DompetKu siap digunakan!";
+
+    const sisaWaktu = Math.max(
+      0,
+      1500 - (Date.now() - mulai)
+    );
+
+    setTimeout(() => {
+      layar.classList.add("loading-selesai");
+
+      setTimeout(() => {
+        layar.remove();
+      }, 600);
+    }, sisaWaktu);
+  }
+
+  // Animasi progres hanya untuk efek visual.
+  let progres = 0;
+
+  const animasi = setInterval(() => {
+    progres = Math.min(progres + Math.random() * 13 + 4, 90);
+
+    if (bar) bar.style.width = progres + "%";
+  }, 120);
+
+  function mulaiTutup() {
+    clearInterval(animasi);
+    tutupLoading();
+  }
+
+  if (document.readyState === "complete") {
+    mulaiTutup();
+  } else {
+    window.addEventListener("load", mulaiTutup, {
+      once: true
+    });
+  }
+})();
+
+
+/* =========================================
+   FITUR 1: DASHBOARD PINTAR DOMPETKU
+========================================= */
+function nilaiBulanIni(daftar) {
+  const sekarang = new Date();
+  return daftar.filter(item => {
+    if (!item || typeof item.tanggal !== "string") return false;
+    const tanggal = new Date(item.tanggal + "T12:00:00");
+    return !Number.isNaN(tanggal.getTime()) &&
+      tanggal.getMonth() === sekarang.getMonth() &&
+      tanggal.getFullYear() === sekarang.getFullYear();
+  }).reduce((total, item) => total + Number(item.jumlah || 0), 0);
+}
+
+function tampilkanDashboardPintar() {
+  const elKeluar = document.getElementById("pintarPengeluaranBulan");
+  const elMasuk = document.getElementById("pintarPemasukanBulan");
+  const elKategori = document.getElementById("pintarKategoriTerbesar");
+  const elRata = document.getElementById("pintarRataRata");
+  const elStatus = document.getElementById("statusKeuangan");
+  const elSaran = document.getElementById("saranKeuangan");
+  if (!elKeluar || !elMasuk || !elKategori || !elRata || !elStatus || !elSaran) return;
+
+  const keluarBulan = nilaiBulanIni(transaksi);
+  const masukBulan = nilaiBulanIni(Array.isArray(pemasukan) ? pemasukan : []);
+  const transaksiBulan = transaksi.filter(item => {
+    if (!item || typeof item.tanggal !== "string") return false;
+    const tanggal = new Date(item.tanggal + "T12:00:00");
+    const sekarang = new Date();
+    return !Number.isNaN(tanggal.getTime()) &&
+      tanggal.getMonth() === sekarang.getMonth() &&
+      tanggal.getFullYear() === sekarang.getFullYear();
+  });
+
+  const jumlahKategori = {};
+  transaksiBulan.forEach(item => {
+    const kategori = String(item.kategori || "Lainnya");
+    jumlahKategori[kategori] = (jumlahKategori[kategori] || 0) + Number(item.jumlah || 0);
+  });
+
+  const kategoriTerbesar = Object.entries(jumlahKategori)
+    .sort((a, b) => b[1] - a[1])[0];
+
+  const hariUnik = new Set(transaksiBulan.map(item => item.tanggal)).size;
+  const rataRata = hariUnik > 0 ? Math.round(keluarBulan / hariUnik) : 0;
+
+  elKeluar.textContent = formatRupiah(keluarBulan);
+  elMasuk.textContent = formatRupiah(masukBulan);
+  elKategori.textContent = kategoriTerbesar ? kategoriTerbesar[0] : "Belum ada";
+  elRata.textContent = formatRupiah(rataRata);
+
+  const saldoSaatIni = saldoAwal +
+    (Array.isArray(pemasukan) ? pemasukan.reduce((sum, item) => sum + Number(item.jumlah || 0), 0) : 0) -
+    transaksi.reduce((sum, item) => sum + Number(item.jumlah || 0), 0);
+
+  let status = "Terkendali";
+  let saran = "Bagus! Terus catat transaksi agar kondisi keuanganmu tetap terpantau.";
+
+  if (anggaran > 0 && keluarBulan >= anggaran) {
+    status = "Anggaran lewat";
+    saran = "Pengeluaran bulan ini sudah mencapai atau melewati batas anggaran. Tunda belanja yang tidak mendesak.";
+  } else if (anggaran > 0 && keluarBulan >= anggaran * 0.8) {
+    status = "Hampir batas";
+    saran = "Pengeluaran sudah mencapai 80% anggaran. Periksa kembali belanja yang masih bisa dikurangi.";
+  } else if (saldoSaatIni < 0) {
+    status = "Saldo minus";
+    saran = "Total pengeluaran melebihi uang yang tercatat. Periksa transaksi dan catat pemasukan bila ada.";
+  } else if (keluarBulan === 0 && masukBulan === 0) {
+    status = "Belum ada data";
+    saran = "Mulai catat pemasukan dan pengeluaran bulan ini agar DompetKu bisa memberi ringkasan yang lebih berguna.";
+  } else if (kategoriTerbesar) {
+    saran = "Pengeluaran terbesar bulan ini ada di kategori " + kategoriTerbesar[0] +
+      " sebesar " + formatRupiah(kategoriTerbesar[1]) + ". Cek apakah ada yang bisa dihemat.";
+  }
+
+  elStatus.textContent = status;
+  elStatus.classList.toggle("status-waspada", status === "Hampir batas" || status === "Anggaran lewat" || status === "Saldo minus");
+  elSaran.textContent = saran;
+}
+
+
+// Render Dashboard Pintar setelah data awal dimuat.
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", tampilkanDashboardPintar, { once: true });
+} else {
+  tampilkanDashboardPintar();
+}
