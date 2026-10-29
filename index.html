@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DompetKu - Catatan Keuangan</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+      
+<!-- LOADING SCREEN DOMPETKU -->
+<div id="loadingScreen" aria-label="Memuat DompetKu">
+  <div class="loading-content">
+    <div class="loading-logo">D</div>
+
+    <h1>Dompet<span>Ku</span></h1>
+    <p>Kelola uang, wujudkan impian.</p>
+
+    <div class="loading-spinner"></div>
+
+    <div class="loading-progress">
+      <div id="loadingBar"></div>
+    </div>
+
+    <small id="loadingText">Menyiapkan keuanganmu...</small>
+  </div>
+</div>
+
+      
+<nav class="navigasi-dompet">
+  <a href="#beranda" class="nav-item aktif" data-halaman="beranda">
+    🏠 <span>Beranda</span>
+  </a>
+  <a href="#transaksi" class="nav-item" data-halaman="transaksi">
+    💳 <span>Transaksi</span>
+  </a>
+  <a href="#laporan" class="nav-item" data-halaman="laporan">
+    📊 <span>Laporan</span>
+  </a>
+  <a href="#pengaturan" class="nav-item" data-halaman="pengaturan">
+    ⚙️ <span>Pengaturan</span>
+  </a>
+</nav>
+      
+    <header>
+    <h1>Dompetku</h1>
+    <P>Catatan Keuangan</P>
+    </header>
+    <main>
+      <section class="saldo">
+        <p>Sisa Uang</p>
+        <h2 id="sisaUang">Rp0</h2>
+
+        <label for="saldoAwal">Saldo awal(Rp)</label>
+        <div class="baris">
+          <input 
+            type="number"
+            id="saldoAwal"
+            placeholder="Masukkan saldo awal"
+            min="0"
+            >
+          <button id="simpanSaldo">Simpan</button>
+        </div>
+      </section>
+
+      <section class="ringkasan">
+        <div class="kartu">
+          <p>Total pengeluaran</p>
+          <h3 id="totalPengeluaran">Rp0</h3>
+        </div>
+        <div class="kartu">
+          <p>Jumlah Transaksi</p>
+          <h3 id="jumlahTransaksi">0</h3>
+        </div>
+      </section>
+
+
+      <!-- DASHBOARD PINTAR: FITUR PERTAMA -->
+      <section class="panel dashboard-pintar" id="dashboardPintar">
+        <div class="dashboard-heading">
+          <div>
+            <p class="label-kecil">RINGKASAN OTOMATIS</p>
+            <h2>✨ Dashboard Pintar</h2>
+          </div>
+          <span class="status-dashboard" id="statusKeuangan">Memeriksa...</span>
+        </div>
+        <p class="teks-bantuan">Ringkasan kondisi keuangan berdasarkan catatan yang kamu simpan.</p>
+        <div class="dashboard-grid">
+          <article class="dashboard-mini">
+            <span>Pengeluaran bulan ini</span>
+            <strong id="pintarPengeluaranBulan">Rp0</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Pemasukan bulan ini</span>
+            <strong id="pintarPemasukanBulan">Rp0</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Kategori terbesar</span>
+            <strong id="pintarKategoriTerbesar">Belum ada</strong>
+          </article>
+          <article class="dashboard-mini">
+            <span>Rata-rata pengeluaran</span>
+            <strong id="pintarRataRata">Rp0</strong>
+          </article>
+        </div>
+        <div class="saran-dashboard">
+          <span aria-hidden="true">💡</span>
+          <p id="saranKeuangan">Catat pemasukan dan pengeluaran untuk mendapatkan saran.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Tambah Pengeluaran</h2>
+
+        <form id="formPengeluaran">
+          <label for="nama">Nama pengeluaran</label>
+          <input 
+            type="text"
+            id="nama"
+            placeholder="contoh: Makan siang"
+            required
+            >
+          
+          <label for="jumlah"> Jumlah Uang(Rp)</label>
+          <input
+            type="text"
+            id="jumlah"
+            placeholder="Contoh: 50.000"
+            inputmode="numeric"
+            autocomplete="off"
+            required
+            >
+
+          <label for="tanggal">Tanggal</label>
+          <input type="date" id="tanggal"
+            required>
+
+          <label for="kategori">Kategori</label> 
+          <select id="kategori">
+            <option>Makanan</option>
+            <option>Transportasi</option>
+            <option>Belanja</option>
+            <option>Kesehatn</option>
+            <option>Hiburan</option>
+            <option>lainnya</option>
+          </select>
+
+          <button type="submit"
+            class="tombol-tambah">
+                  + simpan Pengluaran
+            </button>                     
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>Riwayat Pengluaran</h2>
+        <div id="riwayat" class="riwayat"></div>
+      </section>
+        
+<!-- Anggaran bulanan -->
+<section class="panel">
+  <h2>🎯 Anggaran Bulanan</h2>
+  <label for="anggaran">Batas pengeluaran per bulan (Rp)</label>
+  <div class="baris">
+    <input
+      type="text"
+      id="anggaran"
+      inputmode="numeric"
+      placeholder="Contoh: 1.000.000"
+    >
+    <button id="simpanAnggaran">Simpan</button>
+  </div>
+
+  <p id="infoAnggaran">Atur anggaran bulananmu.</p>
+  <div class="progress">
+    <div id="progressAnggaran"></div>
+  </div>
+
+    
+<!-- Grafik Kategori -->
+<div class="panel panel-kategori">
+  <h2>🍩 Pengeluaran per Kategori</h2>
+  <p class="teks-bantuan">
+    Lihat ke mana uangmu paling banyak digunakan.
+  </p>
+
+  <div class="donat-layout">
+    <div class="donat-kanvas">
+      <canvas
+        id="grafikKategori"
+        role="img"
+        aria-label="Grafik donat pengeluaran per kategori">
+      </canvas>
+    </div>
+
+    <div id="legendaKategori" class="legenda-kategori"></div>
+  </div>
+
+  <p id="totalKategori" class="teks-bantuan">
+    Total pengeluaran: Rp0
+  </p>
+</div>
+
+</section>
+
+<!-- Cari transaksi -->
+<section class="panel">
+  <h2>🔎 Cari Transaksi</h2>
+  <input
+    type="search"
+    id="cariTransaksi"
+    placeholder="Cari nama pengeluaran..."
+  >
+
+  <label for="filterKategori">Filter kategori</label>
+  <select id="filterKategori">
+    <option value="">Semua kategori</option>
+    <option>Makanan</option>
+    <option>Transportasi</option>
+    <option>Belanja</option>
+    <option>Tagihan</option>
+    <option>Kesehatan</option>
+    <option>Hiburan</option>
+    <option>Lainnya</option>
+  </select>
+
+  <button id="eksporCSV" class="tombol-tambah">
+    📥 Unduh Laporan CSV
+  </button>
+</section>
+        
+<!-- Grafik Pengeluaran -->
+<section class="panel" id="bagianGrafik">
+  <h2>📊 Analisis Pengeluaran</h2>
+  <p class="teks-bantuan">
+    Pantau pola pengeluaranmu agar keuangan tetap terkontrol.
+  </p>
+
+  <div class="pilihan-grafik">
+    <button type="button" id="grafikHarian" class="aktif">
+      7 Hari Terakhir
+    </button>
+    <button type="button" id="grafikBulanan">
+      6 Bulan Terakhir
+    </button>
+  </div>
+
+  <div class="wadah-grafik">
+    <canvas id="grafikPengeluaran"
+      role="img"
+      aria-label="Grafik pengeluaran uang">
+    </canvas>
+  </div>
+
+  <p id="ringkasanGrafik" class="teks-bantuan">
+    Grafik pengeluaran akan ditampilkan di sini.
+  </p>
+</section>
+        
+<section class="panel tabungan-panel">
+  <h2>🎯 Target Tabungan</h2>
+  <p class="teks-bantuan">
+    Sedikit demi sedikit, capai impianmu.
+  </p>
+
+  <label for="namaTarget">Nama target</label>
+  <input
+    id="namaTarget"
+    type="text"
+    placeholder="Contoh: Beli laptop"
+  />
+
+  <label for="nilaiTarget">Target uang (Rp)</label>
+  <input
+    id="nilaiTarget"
+    type="text"
+    inputmode="numeric"
+    placeholder="5.000.000"
+  />
+
+  <label for="tabunganTerkumpul">Uang terkumpul (Rp)</label>
+  <input
+    id="tabunganTerkumpul"
+    type="text"
+    inputmode="numeric"
+    placeholder="0"
+  />
+
+  <button id="simpanTarget" type="button">
+    Simpan Target
+  </button>
+
+  <div class="target-info">
+    <div class="target-angka">
+      <span id="labelTarget">Target tabungan</span>
+      <strong id="persenTarget">0%</strong>
+    </div>
+
+    <div class="progress">
+      <div id="progressTarget"></div>
+    </div>
+
+    <p id="detailTarget" class="teks-bantuan">
+      Mulai tetapkan target tabunganmu.
+    </p>
+  </div>
+</section>
+        
+<section class="panel pencapaian-panel" id="pencapaian">
+  <div class="pencapaian-heading">
+    <div>
+      <p class="label-kecil">LEVEL KEUANGANMU</p>
+      <h2>🏆 Pencapaian DompetKu</h2>
+    </div>
+    <span class="pencapaian-total" id="jumlahLencana">0/4</span>
+  </div>
+  <p class="teks-bantuan">Setiap catatan kecil membantumu membangun kebiasaan finansial yang lebih baik.</p>
+  <div class="lencana-grid" id="daftarLencana">
+    <article class="lencana" data-lencana="pertama"><span>🌱</span><div><strong>Langkah Pertama</strong><small>Simpan transaksi pertamamu</small></div></article>
+    <article class="lencana" data-lencana="rajin"><span>📝</span><div><strong>Pencatat Rajin</strong><small>Catat 7 transaksi</small></div></article>
+    <article class="lencana" data-lencana="tabungan"><span>🎯</span><div><strong>Pengejar Impian</strong><small>Buat target tabungan</small></div></article>
+    <article class="lencana" data-lencana="seimbang"><span>💚</span><div><strong>Saldo Terjaga</strong><small>Saldo akhir tidak negatif</small></div></article>
+  </div>
+  <button type="button" id="perbaruiLencana" class="tombol-lencana">Perbarui pencapaian</button>
+  <p id="pesanPencapaian" class="teks-bantuan" aria-live="polite">Ayo kumpulkan lencana pertamamu!</p>
+</section>
+
+
+<section class="panel fitur-ai" id="asistenKeuangan">
+  <p class="label-kecil">ASISTEN LOKAL</p>
+  <h2>🤖 Asisten Keuangan Pintar</h2>
+  <p class="teks-bantuan">Saran dibuat dari catatan di perangkat ini, tanpa mengirim data ke server.</p>
+  <div id="hasilAsisten" class="hasil-asisten" aria-live="polite">Sedang membaca ringkasan keuangan…</div>
+  <button type="button" id="perbaruiAsisten">✨ Analisis ulang keuanganku</button>
+</section>
+
+<section class="panel" id="kalenderTransaksi">
+  <h2>📅 Kalender Transaksi</h2>
+  <p class="teks-bantuan">Pilih tanggal untuk melihat catatan pemasukan, pengeluaran, dan tagihan.</p>
+  <label for="tanggalKalender">Tanggal yang dilihat</label>
+  <input type="date" id="tanggalKalender">
+  <div id="hasilKalender" class="hasil-asisten" aria-live="polite">Pilih tanggal untuk melihat aktivitas.</div>
+</section>
+
+<section class="panel" id="pengingatTagihan">
+  <h2>🔔 Pengingat Tagihan</h2>
+  <p class="teks-bantuan">Pengingat tersimpan di browser ini. Buka DompetKu untuk memeriksa tagihan jatuh tempo.</p>
+  <form id="formTagihan">
+    <label for="namaTagihan">Nama tagihan</label>
+    <input id="namaTagihan" type="text" placeholder="Contoh: Paket internet" required>
+    <label for="nominalTagihan">Nominal (Rp)</label>
+    <input id="nominalTagihan" type="text" inputmode="numeric" placeholder="Contoh: 150.000" required>
+    <label for="jatuhTempoTagihan">Tanggal jatuh tempo</label>
+    <input id="jatuhTempoTagihan" type="date" required>
+    <button type="submit" class="tombol-tambah">＋ Simpan Pengingat</button>
+  </form>
+  <button type="button" id="aktifkanNotifikasi">🔔 Aktifkan notifikasi browser</button>
+  <div id="daftarTagihan" class="daftar-tagihan"></div>
+  <p id="statusTagihan" class="teks-bantuan" aria-live="polite"></p>
+</section>
+
+<section class="panel" id="pengaturan">
+  <h2>⚙️ Pengaturan</h2>
+  <p class="teks-bantuan">
+    Kelola preferensi tampilan DompetKu.</p>
+
+    
+<!-- RINGKASAN PEMASUKAN -->
+<div class="kartu kartu-pemasukan">
+  <p>Total pemasukan</p>
+  <h3 id="totalPemasukan">Rp0</h3>
+</div>
+
+<!-- FORM TAMBAH PEMASUKAN -->
+<section class="panel" id="bagianPemasukan">
+  <h2>💰 Tambah Pemasukan</h2>
+  <p class="teks-bantuan">
+    Catat setiap uang yang masuk.
+  </p>
+
+  <form id="formPemasukan">
+    <label for="namaPemasukan">Sumber pemasukan</label>
+    <input
+      id="namaPemasukan"
+      type="text"
+      placeholder="Contoh: Gaji atau hasil usaha"
+      required
+    />
+
+    <label for="jumlahPemasukan">Nominal (Rp)</label>
+    <input
+      id="jumlahPemasukan"
+      type="text"
+      inputmode="numeric"
+      placeholder="Contoh: 1.000.000"
+      required
+    />
+
+    <label for="tanggalPemasukan">Tanggal</label>
+    <input
+      id="tanggalPemasukan"
+      type="date"
+      required
+    />
+
+    <label for="kategoriPemasukan">Kategori pemasukan</label>
+    <select id="kategoriPemasukan">
+      <option value="Gaji">Gaji</option>
+      <option value="Usaha">Usaha</option>
+      <option value="Bonus">Bonus</option>
+      <option value="Hadiah">Hadiah</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <button class="tombol-tambah" type="submit">
+      + Simpan Pemasukan
+    </button>
+  </form>
+</section>
+
+<!-- RIWAYAT PEMASUKAN -->
+<section class="panel" id="riwayatPemasukanPanel">
+  <h2>📥 Riwayat Pemasukan</h2>
+  <div id="riwayatPemasukan">
+    <p class="kosong">Belum ada pemasukan.</p>
+  </div>
+</section>
+
+  <div class="fitur-tambahan">
+    <h3>🛡️ Privasi & Cadangan Data</h3>
+    <p class="teks-bantuan">Sembunyikan nominal saat membuka aplikasi di tempat umum, atau simpan salinan data keuanganmu.</p>
+    <button type="button" id="tombolPrivasi" aria-pressed="false">🙈 Sembunyikan nominal</button>
+    <div class="cadangan-aksi">
+      <button type="button" id="cadangkanData">📦 Cadangkan Data</button>
+      <button type="button" id="pilihPulihkanData">♻️ Pulihkan Data</button>
+      <input type="file" id="filePulihkanData" accept=".json,application/json" hidden>
+    </div>
+    <div class="cadangan-aksi ekspor-aksi">
+      <button type="button" id="eksporCSV">📄 Ekspor CSV</button>
+      <button type="button" id="eksporPDF">🖨️ Simpan Laporan PDF</button>
+    </div>
+    <p id="statusCadangan" class="teks-bantuan" aria-live="polite">Cadangan mencakup data keuangan, target tabungan, tema, dan tagihan. PIN tidak digunakan.</p>
+  </div>
+
+  <button type="button" id="tombolTema">
+    🌙 Ganti Tema
+  </button>
+</section>
+
+
+    </main>
+
+    <footer>
+      <p>DompetKu . Kelola uang dengan bijak</p>
+    </footer>
+    <script src="script.js"></script>
+
+
+<script>
+// PENCAPAIAN DOMPETKU: membaca data yang sudah tersimpan tanpa mengubahnya
+(() => {
+  const tombol = document.getElementById('perbaruiLencana');
+  if (!tombol) return;
+  const rupiah = n => 'Rp' + Number(n || 0).toLocaleString('id-ID');
+  function perbaruiLencana() {
+    let transaksi = [], pemasukan = [], saldoAwal = 0, target = {};
+    try {
+      transaksi = JSON.parse(localStorage.getItem('dompet_transaksi') || '[]');
+      pemasukan = JSON.parse(localStorage.getItem('dompet_pemasukan') || '[]');
+      saldoAwal = Number(localStorage.getItem('dompet_saldo') || 0);
+      target = JSON.parse(localStorage.getItem('dompet_target') || '{}');
+      if (!Array.isArray(transaksi)) transaksi = [];
+      if (!Array.isArray(pemasukan)) pemasukan = [];
+    } catch (e) {
+      document.getElementById('pesanPencapaian').textContent = 'Data belum bisa dibaca. Coba muat ulang halaman.';
+      return;
+    }
+    const totalMasuk = pemasukan.reduce((s, x) => s + (Number(x.jumlah) || 0), 0);
+    const totalKeluar = transaksi.reduce((s, x) => s + (Number(x.jumlah) || 0), 0);
+    const targetAktif = target && (Number(target.target) > 0 || String(target.nama || '').trim());
+    const hasil = {
+      pertama: transaksi.length + pemasukan.length >= 1,
+      rajin: transaksi.length + pemasukan.length >= 7,
+      tabungan: Boolean(targetAktif),
+      seimbang: saldoAwal + totalMasuk - totalKeluar >= 0
+    };
+    let terbuka = 0;
+    document.querySelectorAll('[data-lencana]').forEach(el => {
+      const aktif = Boolean(hasil[el.dataset.lencana]);
+      el.classList.toggle('lencana-terbuka', aktif);
+      el.classList.toggle('lencana-terkunci', !aktif);
+      if (aktif) terbuka++;
+    });
+    document.getElementById('jumlahLencana').textContent = terbuka + '/4';
+    document.getElementById('pesanPencapaian').textContent = terbuka === 4
+      ? 'Keren! Semua lencana terbuka. Terus jaga kebiasaan baikmu!'
+      : 'Kamu membuka ' + terbuka + ' dari 4 lencana. Lanjut sedikit demi sedikit!';
+  }
+  tombol.addEventListener('click', perbaruiLencana);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', perbaruiLencana);
+  else perbaruiLencana();
+})();
+</script>
+
+
+
+<script>
+// Navigasi halaman DompetKu: konten dipisah per tab, tanpa scroll seluruh halaman.
+(() => {
+  const main = document.querySelector('main');
+  const nav = document.querySelector('.navigasi-dompet');
+  if (!main || !nav || main.dataset.pagesReady) return;
+  main.dataset.pagesReady = 'true';
+  const items = Array.from(main.children);
+  const pages = {
+    beranda: document.createElement('div'),
+    transaksi: document.createElement('div'),
+    laporan: document.createElement('div'),
+    pengaturan: document.createElement('div')
+  };
+  Object.entries(pages).forEach(([key, el]) => {
+    el.className = 'halaman-aplikasi'; el.dataset.halamanPanel = key;
+    el.setAttribute('aria-label', key);
+  });
+  function kategori(el) {
+    const id = el.id || '';
+    const t = (el.innerText || '').toLowerCase();
+    if (id === 'pengaturan' || id === 'bagianPemasukan' || id === 'riwayatPemasukanPanel' || id === 'pengingatTagihan' || t.includes('pengaturan')) return 'pengaturan';
+    if (id === 'kalenderTransaksi' || id === 'pencapaian' || id === 'bagianGrafik' || t.includes('anggaran bulanan') || t.includes('pengeluaran per kategori') || t.includes('cari transaksi') || t.includes('analisis pengeluaran') || t.includes('target tabungan')) return 'laporan';
+    if (id === 'asistenKeuangan') return 'beranda';
+    if (t.includes('tambah pengeluaran') || t.includes('riwayat pengluaran') || t.includes('tambah pemasukan') || t.includes('riwayat pemasukan')) return 'transaksi';
+    return 'beranda';
+  }
+  items.forEach(el => pages[kategori(el)].appendChild(el));
+  Object.values(pages).forEach(el => main.appendChild(el));
+  function buka(key) {
+    Object.entries(pages).forEach(([nama, el]) => {
+      const aktif = nama === key; el.classList.toggle('halaman-aktif', aktif); el.hidden = !aktif;
+    });
+    nav.querySelectorAll('[data-halaman]').forEach(a => {
+      const aktif = a.dataset.halaman === key; a.classList.toggle('aktif', aktif);
+      if (aktif) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+    main.scrollTop = 0;
+    if (pages[key]) pages[key].scrollTop = 0;
+    history.replaceState(null, '', '#' + key);
+  }
+  nav.querySelectorAll('[data-halaman]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault(); buka(a.dataset.halaman);
+  }));
+  const awal = location.hash.slice(1);
+  buka(pages[awal] ? awal : 'beranda');
+})();
+</script>
+
+  
+<script>
+// FITUR LANJUTAN DOMPETKU: asisten lokal, kalender, dan tagihan; PIN dihapus
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const rupiah = n => new Intl.NumberFormat('id-ID', {style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+  const baca = (key, fallback) => { try { const x=JSON.parse(localStorage.getItem(key)); return x ?? fallback; } catch { return fallback; } };
+  const tanggalHariIni = () => { const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+
+  // Asisten keuangan sederhana berbasis aturan; seluruh analisis dilakukan di perangkat.
+  function analisisKeuangan() {
+    const keluar=baca('dompet_transaksi',[]); const masuk=baca('dompet_pemasukan',[]);
+    const saldoAwal=Number(localStorage.getItem('dompet_saldo')||0);
+    const anggaran=Number(localStorage.getItem('dompet_anggaran')||0);
+    const bulan=tanggalHariIni().slice(0,7);
+    const keluarBulan=(Array.isArray(keluar)?keluar:[]).filter(x=>String(x.tanggal||'').startsWith(bulan)).reduce((a,x)=>a+(Number(x.jumlah)||0),0);
+    const masukBulan=(Array.isArray(masuk)?masuk:[]).filter(x=>String(x.tanggal||'').startsWith(bulan)).reduce((a,x)=>a+(Number(x.jumlah)||0),0);
+    const totalKeluar=(Array.isArray(keluar)?keluar:[]).reduce((a,x)=>a+(Number(x.jumlah)||0),0);
+    const totalMasuk=(Array.isArray(masuk)?masuk:[]).reduce((a,x)=>a+(Number(x.jumlah)||0),0);
+    const saldo=saldoAwal+totalMasuk-totalKeluar;
+    const kategori={}; (Array.isArray(keluar)?keluar:[]).filter(x=>String(x.tanggal||'').startsWith(bulan)).forEach(x=>kategori[x.kategori||'Lainnya']=(kategori[x.kategori||'Lainnya']||0)+(Number(x.jumlah)||0));
+    const terbesar=Object.entries(kategori).sort((a,b)=>b[1]-a[1])[0];
+    const saran=[];
+    if (anggaran>0) { const persen=keluarBulan/anggaran*100; saran.push(persen>=100?'⚠️ Anggaran bulan ini sudah terlampaui. Tunda pembelian yang tidak mendesak.':persen>=80?'🟡 Pengeluaran mendekati batas anggaran. Sisakan ruang untuk kebutuhan wajib.':'✅ Pengeluaran masih dalam batas anggaran bulanan.'); }
+    else saran.push('🎯 Atur anggaran bulanan agar batas pengeluaran lebih mudah dipantau.');
+    if (keluarBulan>masukBulan && masukBulan>0) saran.push('💡 Pengeluaran bulan ini lebih besar daripada pemasukan bulan ini. Coba tinjau pengeluaran non-esensial.');
+    if (saldo<0) saran.push('🛑 Saldo tercatat negatif. Periksa kembali saldo awal dan transaksi yang sudah dicatat.');
+    else if (saldo>0) saran.push('🌱 Jika kebutuhan wajib sudah aman, sisihkan sebagian saldo untuk target tabungan.');
+    if (terbesar) saran.push('📌 Kategori pengeluaran terbesar bulan ini: '+terbesar[0]+' ('+rupiah(terbesar[1])+').');
+    const el=$('hasilAsisten'); if(el) el.replaceChildren(...saran.map(teks=>{const p=document.createElement('p');p.textContent=teks;return p;}));
+  }
+  $('perbaruiAsisten')?.addEventListener('click',analisisKeuangan); analisisKeuangan();
+
+  // Tagihan disimpan pada key terpisah agar data transaksi lama tidak tersentuh.
+  const KEY_TAGIHAN='dompet_tagihan_v1'; let tagihan=baca(KEY_TAGIHAN,[]); if(!Array.isArray(tagihan)) tagihan=[];
+  const inputNominal=$('nominalTagihan');
+  inputNominal?.addEventListener('input',()=>{const n=inputNominal.value.replace(/\D/g,'').slice(0,15);inputNominal.value=n?Number(n).toLocaleString('id-ID'):'';});
+  if($('jatuhTempoTagihan')) $('jatuhTempoTagihan').value=tanggalHariIni();
+  function simpanTagihan(){try{localStorage.setItem(KEY_TAGIHAN,JSON.stringify(tagihan));return true;}catch{ $('statusTagihan').textContent='Tidak bisa menyimpan. Ruang penyimpanan browser mungkin penuh.';return false;}}
+  function tampilTagihan(){const wadah=$('daftarTagihan');if(!wadah)return;wadah.replaceChildren();if(!tagihan.length){const p=document.createElement('p');p.className='kosong';p.textContent='Belum ada pengingat tagihan.';wadah.append(p);return;}
+    [...tagihan].sort((a,b)=>a.tanggal.localeCompare(b.tanggal)).forEach(item=>{const card=document.createElement('article');card.className='tagihan-item';const detail=document.createElement('div');const nama=document.createElement('strong');nama.textContent=item.nama;const info=document.createElement('p');info.textContent=item.tanggal+' • '+rupiah(item.jumlah)+(item.tanggal<tanggalHariIni()?' • TERLAMBAT':item.tanggal===tanggalHariIni()?' • JATUH TEMPO HARI INI':'');detail.append(nama,info);const hapus=document.createElement('button');hapus.type='button';hapus.textContent='Hapus';hapus.className='tombol-hapus';hapus.addEventListener('click',()=>{if(!confirm('Hapus pengingat '+item.nama+'?'))return;const lama=tagihan;tagihan=tagihan.filter(x=>x.id!==item.id);if(simpanTagihan())tampilTagihan();else tagihan=lama;});card.append(detail,hapus);wadah.append(card);});
+    const hariIni=tagihan.filter(x=>x.tanggal===tanggalHariIni());const telat=tagihan.filter(x=>x.tanggal<tanggalHariIni());if($('statusTagihan')) $('statusTagihan').textContent=hariIni.length?'🔔 Ada '+hariIni.length+' tagihan jatuh tempo hari ini.':telat.length?'⚠️ Ada '+telat.length+' tagihan yang lewat jatuh tempo.':'Tidak ada tagihan yang jatuh tempo hari ini.';
+  }
+  $('formTagihan')?.addEventListener('submit',e=>{e.preventDefault();const nama=$('namaTagihan').value.trim(),jumlah=Number($('nominalTagihan').value.replace(/\D/g,'')),tanggal=$('jatuhTempoTagihan').value;if(!nama||!Number.isSafeInteger(jumlah)||jumlah<=0||!tanggal){alert('Periksa nama, nominal, dan tanggal tagihan.');return;}tagihan.push({id:Date.now().toString()+Math.random().toString(16).slice(2),nama,jumlah,tanggal});if(!simpanTagihan()){tagihan.pop();return;}e.target.reset();$('jatuhTempoTagihan').value=tanggalHariIni();tampilTagihan();});
+  $('aktifkanNotifikasi')?.addEventListener('click',async()=>{if(!('Notification' in window)){ $('statusTagihan').textContent='Browser ini tidak mendukung notifikasi. Pengingat tetap terlihat saat DompetKu dibuka.';return;}try{const izin=await Notification.requestPermission();$('statusTagihan').textContent=izin==='granted'?'Notifikasi diizinkan. Pengingat akan diperiksa saat DompetKu dibuka.':'Izin notifikasi tidak diberikan; pengingat tetap tersedia di halaman.';if(izin==='granted'){const hariIni=tagihan.filter(x=>x.tanggal===tanggalHariIni());if(hariIni.length)new Notification('DompetKu: tagihan jatuh tempo',{body:hariIni.map(x=>x.nama+' — '+rupiah(x.jumlah)).join('\n')});}}catch{$('statusTagihan').textContent='Notifikasi tidak tersedia di konteks browser ini.';}});
+  tampilTagihan();
+
+  // Kalender gabungan: menampilkan transaksi masuk/keluar dan pengingat pada tanggal terpilih.
+  const pilihTanggal=$('tanggalKalender'); if(pilihTanggal){pilihTanggal.value=tanggalHariIni();}
+  function tampilKalender(){const el=$('hasilKalender');if(!el||!pilihTanggal)return;const t=pilihTanggal.value;el.replaceChildren();if(!t){el.textContent='Pilih tanggal terlebih dahulu.';return;}const keluar=baca('dompet_transaksi',[]),masuk=baca('dompet_pemasukan',[]);const daftar=[];
+    (Array.isArray(keluar)?keluar:[]).filter(x=>x.tanggal===t).forEach(x=>daftar.push({jenis:'Pengeluaran',nama:x.nama,jumlah:Number(x.jumlah)||0,arah:'−'}));
+    (Array.isArray(masuk)?masuk:[]).filter(x=>x.tanggal===t).forEach(x=>daftar.push({jenis:'Pemasukan',nama:x.nama,jumlah:Number(x.jumlah)||0,arah:'+'}));
+    tagihan.filter(x=>x.tanggal===t).forEach(x=>daftar.push({jenis:'Tagihan',nama:x.nama,jumlah:Number(x.jumlah)||0,arah:'🔔'}));
+    if(!daftar.length){el.textContent='Tidak ada transaksi atau tagihan pada tanggal ini.';return;}
+    daftar.forEach(x=>{const p=document.createElement('p');p.textContent=x.jenis+' • '+x.nama+' • '+x.arah+' '+rupiah(x.jumlah);el.append(p);});
+  }
+  pilihTanggal?.addEventListener('change',tampilKalender);tampilKalender();
+
+})();
+</script>
+
+</body>
+</html>
