@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perbaikan Web</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  color: #f1f5f9;
+  background:
+    radial-gradient(ellipse at top, #063c35 0%, transparent 45%),
+    #061018;
+  overflow-x: hidden;
+}
+
+header {
+  padding: 22px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #16423d;
+  backdrop-filter: blur(15px);
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.logo span,
+h1 span {
+  color: #00e6b0;
+}
+
+nav a {
+  color: #dce7ef;
+  text-decoration: none;
+  margin-left: 22px;
+  font-size: 14px;
+}
+
+nav a:hover {
+  color: #00e6b0;
+}
+
+main {
+  text-align: center;
+  padding: 85px 20px 45px;
+}
+
+.icon {
+  font-size: 75px;
+  margin-bottom: 25px;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px #00e6b080);
+}
+
+h1 {
+  font-size: clamp(36px, 8vw, 65px);
+  margin-bottom: 20px;
+}
+
+.desc {
+  color: #c2d0dc;
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.status {
+  display: inline-block;
+  margin: 28px 0;
+  padding: 11px 19px;
+  border: 1px solid #087f69;
+  border-radius: 30px;
+  background: #063b33aa;
+  color: #00e6b0;
+  font-size: 13px;
+}
+
+.progress {
+  width: min(350px, 85%);
+  height: 10px;
+  margin: 0 auto 22px;
+  background: #263747;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress div {
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(90deg, #00a985, #00f5bd);
+  border-radius: inherit;
+  animation: glow 2s infinite alternate;
+}
+
+.thanks {
+  color: #a8bacb;
+  font-size: 14px;
+}
+
+.features {
+  max-width: 950px;
+  margin: 45px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.card {
+  padding: 22px 15px;
+  background: #ffffff08;
+  border: 1px solid #ffffff12;
+  border-radius: 18px;
+  backdrop-filter: blur(15px);
+  transition: .3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: #00e6b0;
+  background: #00e6b00c;
+}
+
+.card .emoji {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.card h3 {
+  font-size: 15px;
+  margin-bottom: 9px;
+}
+
+.card p {
+  color: #a8bacb;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+footer {
+  text-align: center;
+  padding: 25px 15px;
+  color: #91a5b7;
+  font-size: 13px;
+  border-top: 1px solid #17332f;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow {
+  from { filter: brightness(.8); }
+  to { filter: brightness(1.3); }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 18px;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  nav a {
+    margin-left: 10px;
+    font-size: 12px;
+  }
+
+  main {
+    padding-top: 65px;
+  }
+
+  .icon {
+    font-size: 60px;
+  }
+
+  .desc {
+    font-size: 15px;
+  }
+
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 35px;
+  }
+
+  .card {
+    padding: 18px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">⚙ Perbaikan <span>Web</span></div>
+  <nav>
+    <a href="#beranda">Beranda</a>
+    <a href="#tentang">Tentang</a>
+  </nav>
+</header>
+
+<main id="beranda">
+  <div class="icon">💻</div>
+
+  <h1>Perbaikan <span>Web</span></h1>
+
+  <p class="desc">
+    Saat ini website sedang dalam proses perbaikan.<br>
+    Kami akan segera kembali!
+  </p>
+
+  <div class="status">● Website sedang diperbaiki</div>
+
+  <div class="progress">
+    <div></div>
+  </div>
+
+  <p class="thanks">
+    Terima kasih atas pengertian Anda. 💚
+  </p>
+</main>
+
+<section class="features" id="tentang">
+
+  <div class="card">
+    <div class="emoji">🛡️</div>
+    <h3>Lebih Stabil</h3>
+    <p>Meningkatkan kestabilan website.</p>
+  </div>
+
+  <div class="card">
+    <div class="emoji">🚀</div>
+    <h3>Lebih Cepat</h3>
+    <p>Optimasi performa dan kecepatan.</p>
+  </div>
+
+  <div class="card">
+    <div class="emoji">✨</div>
+    <h3>Lebih Baik</h3>
+    <p>Tampilan lebih modern dan menarik.</p>
+  </div>
+
+  <div class="card">
+    <div class="emoji">💚</div>
+    <h3>Untuk Anda</h3>
+    <p>Memberikan pengalaman yang lebih baik.</p>
+  </div>
+
+</section>
+
+<footer>
+  &lt;/&gt; Terima kasih telah mengunjungi website kami.
+</footer>
+
+</body>
+</html>
